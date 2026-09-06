@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Dashboard | CTRLZONE</title><link rel="stylesheet" href="css/style.css">
-</head><body>
+</head><body data-protected="true">
 
 <aside class="sidebar">
   <a class="brand" href="index.html"><span>CTRL</span>ZONE</a>
@@ -21,6 +21,6 @@
 </aside>
 
 <main><header class="topbar"><button class="menu-btn" onclick="toggleMenu()">☰</button><div class="status">● ONLINE</div><a href="dashboard.html" class="profile">👤</a></header>
-<section class="page-head"><div class="badge">CTRLZONE</div><h1>Dashboard</h1><p>Your CTRLZONE control panel.</p></section><div class="stats"><div class="stat"><b>0</b><span>Posts</span></div><div class="stat"><b>0</b><span>Events</span></div><div class="stat"><b>0</b><span>Videos</span></div></div><div class="card"><h3>Welcome, Gamer!</h3><p>This is a front-end demo dashboard. Connect a backend/database later for real accounts and data.</p></div>
+<section class="page-head"><div class="badge">CTRLZONE</div><h1>Dashboard</h1><p>Welcome, <span id="userName">Gamer</span>.</p><button class="btn ghost" onclick="ctrlzoneLogout()">LOGOUT</button></section><div class="stats"><div class="stat"><b>0</b><span>Posts</span></div><div class="stat"><b>0</b><span>Events</span></div><div class="stat"><b>0</b><span>Videos</span></div></div><div class="card"><h3>Welcome, Gamer!</h3><p>This is a front-end demo dashboard. Connect a backend/database later for real accounts and data.</p></div>
 <footer>© 2026 CTRLZONE — All-in-One Gaming Platform</footer>
-</main><script src="js/script.js"></script></body></html>
+</main><script src="js/script.js"></script><script type="module" src="js/firebase-auth.js"></script></body></html>

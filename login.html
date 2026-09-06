@@ -21,6 +21,6 @@
 </aside>
 
 <main><header class="topbar"><button class="menu-btn" onclick="toggleMenu()">☰</button><div class="status">● ONLINE</div><a href="dashboard.html" class="profile">👤</a></header>
-<section class="page-head"><div class="badge">CTRLZONE</div><h1>Login</h1><p>Demo login for the CTRLZONE interface.</p></section><form class="form" onsubmit="demoLogin(event)"><input id="email" type="email" placeholder="Email" required><input type="password" placeholder="Password" required><button class="btn">LOGIN</button><p>Demo mode: no real account is created.</p></form>
+<section class="page-head"><div class="badge">CTRLZONE</div><h1>Login</h1><p>Sign in to your real CTRLZONE account.</p></section><form class="form" onsubmit="ctrlzoneLogin(event)"><input id="email" type="email" placeholder="Email" required><input id="password" type="password" placeholder="Password" required><button class="btn">LOGIN</button><button type="button" class="btn ghost" onclick="googleLogin()">CONTINUE WITH GOOGLE</button><p id="authMessage"></p><p>New here? <a href="register.html">Create an account</a></p></form>
 <footer>© 2026 CTRLZONE — All-in-One Gaming Platform</footer>
-</main><script src="js/script.js"></script></body></html>
+</main><script src="js/script.js"></script><script type="module" src="js/firebase-auth.js"></script></body></html>

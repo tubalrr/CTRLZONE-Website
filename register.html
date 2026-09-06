@@ -21,6 +21,6 @@
 </aside>
 
 <main><header class="topbar"><button class="menu-btn" onclick="toggleMenu()">☰</button><div class="status">● ONLINE</div><a href="dashboard.html" class="profile">👤</a></header>
-<section class="page-head"><div class="badge">CTRLZONE</div><h1>Create Account</h1><p>Create a demo CTRLZONE account.</p></section><form class="form" onsubmit="demoSubmit(event,'Demo account created!')"><input placeholder="Username" required><input type="email" placeholder="Email" required><input type="password" placeholder="Password" required><button class="btn">CREATE ACCOUNT</button></form>
+<section class="page-head"><div class="badge">CTRLZONE</div><h1>Create Account</h1><p>Create your real CTRLZONE account.</p></section><form class="form" onsubmit="ctrlzoneRegister(event)"><input type="text" placeholder="Username (optional)"><input id="email" type="email" placeholder="Email" required><input id="password" type="password" placeholder="Password (minimum 6 characters)" required minlength="6"><button class="btn">CREATE ACCOUNT</button><button type="button" class="btn ghost" onclick="googleLogin()">CONTINUE WITH GOOGLE</button><p id="authMessage"></p><p>Already have an account? <a href="login.html">Login</a></p></form>
 <footer>© 2026 CTRLZONE — All-in-One Gaming Platform</footer>
-</main><script src="js/script.js"></script></body></html>
+</main><script src="js/script.js"></script><script type="module" src="js/firebase-auth.js"></script></body></html>
