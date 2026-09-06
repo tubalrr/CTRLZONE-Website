@@ -77,10 +77,8 @@ function updateUserUI(user) {
     user?.email?.split("@")[0] ||
     "CTRLZONE Gamer";
 
-
   const email =
     user?.email || "";
-
 
   const photo =
     user?.photoURL || "";
@@ -208,7 +206,7 @@ function loadComments(postId) {
 
   const container =
     document.getElementById(
-      `comments-${postId}`
+      "comments-" + postId
     );
 
 
@@ -241,12 +239,14 @@ function loadComments(postId) {
 
     snapshot => {
 
+
       if (snapshot.empty) {
 
-        container.innerHTML =
-          `<p class="no-comments">
+        container.innerHTML = `
+          <p class="no-comments">
             No comments yet.
-          </p>`;
+          </p>
+        `;
 
         return;
 
@@ -305,6 +305,7 @@ function loadComments(postId) {
 
         }).join("");
 
+
     },
 
 
@@ -314,6 +315,13 @@ function loadComments(postId) {
         "Comments error:",
         error
       );
+
+
+      container.innerHTML = `
+        <p class="no-comments">
+          Unable to load comments.
+        </p>
+      `;
 
     }
 
@@ -476,6 +484,8 @@ function startCommunityPosts() {
                 </button>
 
 
+                <!-- COMMENTS BUTTON -->
+
                 <button
                   class="comment-btn"
                   type="button"
@@ -489,10 +499,12 @@ function startCommunityPosts() {
               </div>
 
 
+              <!-- COMMENTS SECTION -->
+
               <div
                 class="comments-section"
                 id="comment-section-${postId}"
-                style="display:none"
+                style="display:none;"
               >
 
 
@@ -501,7 +513,9 @@ function startCommunityPosts() {
                   class="comments-list"
                 >
 
-                  Loading comments...
+                  <p class="no-comments">
+                    Loading comments...
+                  </p>
 
                 </div>
 
@@ -515,11 +529,14 @@ function startCommunityPosts() {
                     type="text"
                     id="comment-input-${postId}"
                     placeholder="Write a comment..."
+                    autocomplete="off"
                     required
                   >
 
 
-                  <button type="submit">
+                  <button
+                    type="submit"
+                  >
 
                     Send
 
@@ -579,40 +596,60 @@ function startCommunityPosts() {
 
 /* =========================
    SHOW / HIDE COMMENTS
+   UPDATED FIX
 ========================= */
 
-window.toggleComments =
-  function(postId) {
+window.toggleComments = function(postId) {
 
-    const section =
-      document.getElementById(
-        `comment-section-${postId}`
-      );
-
-
-    if (!section) return;
+  console.log(
+    "Comments clicked:",
+    postId
+  );
 
 
-    const isHidden =
-      section.style.display === "none";
+  const section =
+    document.getElementById(
+      "comment-section-" + postId
+    );
 
 
-    if (isHidden) {
+  if (!section) {
 
-      section.style.display =
-        "block";
+    console.error(
+      "Comment section not found:",
+      postId
+    );
+
+    return;
+
+  }
 
 
-      loadComments(postId);
+  const isHidden =
+    section.style.display === "none" ||
+    section.style.display === "";
 
-    } else {
 
-      section.style.display =
-        "none";
+  if (isHidden) {
 
-    }
 
-  };
+    section.style.display =
+      "block";
+
+
+    loadComments(postId);
+
+
+  } else {
+
+
+    section.style.display =
+      "none";
+
+
+  }
+
+};
 
 
 /* =========================
@@ -643,8 +680,11 @@ window.createComment =
 
     const input =
       document.getElementById(
-        `comment-input-${postId}`
+        "comment-input-" + postId
       );
+
+
+    if (!input) return;
 
 
     const content =
@@ -800,6 +840,7 @@ window.toggleLike =
             likeSnapshot.exists()
           ) {
 
+
             /* UNLIKE */
 
             transaction.delete(
@@ -814,7 +855,6 @@ window.toggleLike =
               {
 
                 likes:
-
                   Math.max(
                     0,
                     currentLikes - 1
@@ -826,6 +866,7 @@ window.toggleLike =
 
 
           } else {
+
 
             /* LIKE */
 
@@ -1083,11 +1124,15 @@ window.createCommunityPost =
 
     if (!user) {
 
-      status.textContent =
-        "Please log in first.";
+      if (status) {
 
-      status.style.color =
-        "#ff8a8a";
+        status.textContent =
+          "Please log in first.";
+
+        status.style.color =
+          "#ff8a8a";
+
+      }
 
       return;
 
@@ -1155,22 +1200,28 @@ window.createCommunityPost =
       input.value = "";
 
 
-      status.textContent =
-        "Posted successfully! 🔥";
+      if (status) {
 
+        status.textContent =
+          "Posted successfully! 🔥";
 
-      status.style.color =
-        "#5eead4";
+        status.style.color =
+          "#5eead4";
+
+      }
 
 
     } catch (error) {
 
-      status.textContent =
-        error.message;
+      if (status) {
 
+        status.textContent =
+          error.message;
 
-      status.style.color =
-        "#ff8a8a";
+        status.style.color =
+          "#ff8a8a";
+
+      }
 
 
       console.error(error);
