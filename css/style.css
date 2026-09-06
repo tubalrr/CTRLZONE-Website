@@ -453,5 +453,6 @@ footer{text-align:center;color:#3a4a64;padding:32px;border-top:1px solid var(--b
 .avatar-large{
   width:64px !important;
   height:64px !important;
-  font-size:22px !important;
+  font-size:22px !important;  
+}
 }
