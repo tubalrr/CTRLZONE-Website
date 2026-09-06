@@ -18,6 +18,7 @@ import {
   collection,
   addDoc,
   doc,
+  getDoc,
   query,
   orderBy,
   onSnapshot,
@@ -58,12 +59,8 @@ function message(id, text, error = false) {
   const el = document.getElementById(id);
 
   if (el) {
-
     el.textContent = text;
-
-    el.style.color =
-      error ? "#ff8a8a" : "#5eead4";
-
+    el.style.color = error ? "#ff8a8a" : "#5eead4";
   }
 
 }
@@ -85,6 +82,10 @@ function updateUserUI(user) {
     user?.email || "";
 
 
+  const photo =
+    user?.photoURL || "";
+
+
   document
     .querySelectorAll("[data-user-name]")
     .forEach(el => {
@@ -103,14 +104,36 @@ function updateUserUI(user) {
     });
 
 
+  /* PROFILE PICTURE */
+
   document
     .querySelectorAll("[data-user-avatar]")
     .forEach(el => {
 
-      el.textContent =
-        displayName
-          .charAt(0)
-          .toUpperCase();
+      if (photo) {
+
+        el.innerHTML = `
+          <img
+            src="${photo}"
+            alt="Profile Picture"
+            style="
+              width:100%;
+              height:100%;
+              object-fit:cover;
+              border-radius:50%;
+              display:block;
+            "
+          >
+        `;
+
+      } else {
+
+        el.textContent =
+          displayName
+            .charAt(0)
+            .toUpperCase();
+
+      }
 
     });
 
@@ -136,15 +159,11 @@ function updateUserUI(user) {
 
 
   const postForm =
-    document.getElementById(
-      "communityPostForm"
-    );
+    document.getElementById("communityPostForm");
 
 
   const loginHint =
-    document.querySelector(
-      ".login-hint"
-    );
+    document.querySelector(".login-hint");
 
 
   if (postForm) {
@@ -172,15 +191,10 @@ function updateUserUI(user) {
 function escapeHTML(text) {
 
   return String(text || "")
-
     .replaceAll("&", "&amp;")
-
     .replaceAll("<", "&lt;")
-
     .replaceAll(">", "&gt;")
-
     .replaceAll('"', "&quot;")
-
     .replaceAll("'", "&#039;");
 
 }
@@ -227,7 +241,6 @@ function loadComments(postId) {
 
     snapshot => {
 
-
       if (snapshot.empty) {
 
         container.innerHTML =
@@ -242,7 +255,6 @@ function loadComments(postId) {
 
       container.innerHTML =
         snapshot.docs.map(commentDoc => {
-
 
           const comment =
             commentDoc.data();
@@ -291,9 +303,7 @@ function loadComments(postId) {
 
           `;
 
-
         }).join("");
-
 
     },
 
@@ -346,7 +356,7 @@ function startCommunityPosts() {
     postsQuery,
 
 
-    async snapshot => {
+    snapshot => {
 
 
       if (snapshot.empty) {
@@ -355,9 +365,7 @@ function startCommunityPosts() {
 
           <div class="card">
 
-            <h3>
-              No posts yet
-            </h3>
+            <h3>No posts yet</h3>
 
             <p>
               Be the first gamer to post! 🎮
@@ -372,231 +380,167 @@ function startCommunityPosts() {
       }
 
 
-      const user =
-        currentUser ||
-        auth.currentUser;
-
-
       const postsHTML =
-        await Promise.all(
+        snapshot.docs.map(postDoc => {
 
-          snapshot.docs.map(
-            async postDoc => {
 
+          const post =
+            postDoc.data();
 
-              const post =
-                postDoc.data();
 
+          const postId =
+            postDoc.id;
 
-              const postId =
-                postDoc.id;
 
+          const name =
+            escapeHTML(
+              post.name ||
+              "CTRLZONE Gamer"
+            );
 
-              const name =
-                escapeHTML(
-                  post.name ||
-                  "CTRLZONE Gamer"
-                );
 
+          const initial =
+            name.charAt(0).toUpperCase();
 
-              const initial =
-                name
-                  .charAt(0)
-                  .toUpperCase();
 
+          const content =
+            escapeHTML(
+              post.content
+            ).replaceAll(
+              "\n",
+              "<br>"
+            );
 
-              const content =
-                escapeHTML(
-                  post.content
-                ).replaceAll(
-                  "\n",
-                  "<br>"
-                );
 
+          const date =
+            post.createdAt?.toDate
 
-              const date =
-                post.createdAt?.toDate
+              ? post.createdAt
+                  .toDate()
+                  .toLocaleString()
 
-                  ? post.createdAt
-                      .toDate()
-                      .toLocaleString()
+              : "Just now";
 
-                  : "Just now";
 
+          const likes =
+            Number(
+              post.likes || 0
+            );
 
-              const likes =
-                Number(
-                  post.likes || 0
-                );
 
+          return `
 
-              let hasLiked =
-                false;
+            <article class="community-post">
 
+              <div class="post-user">
 
-              if (user) {
+                <div class="post-avatar">
 
-                const likeDoc =
-                  doc(
+                  ${initial}
 
-                    db,
+                </div>
 
-                    "posts",
 
-                    postId,
+                <div>
 
-                    "likes",
+                  <h3>
+                    ${name}
+                  </h3>
 
-                    user.uid
+                  <span>
+                    ${date}
+                  </span>
 
-                  );
+                </div>
 
+              </div>
 
-                // Like status is handled
-                // by the button state after refresh.
 
-              }
+              <div class="post-content">
 
+                ${content}
 
-              return `
+              </div>
 
-                <article class="community-post">
 
-                  <div class="post-user">
+              <div class="post-actions">
 
-                    <div class="post-avatar">
+                <button
+                  class="like-btn"
+                  type="button"
+                  onclick="toggleLike('${postId}')"
+                >
 
-                      ${initial}
+                  👍 Like (${likes})
 
-                    </div>
+                </button>
 
 
-                    <div>
+                <button
+                  class="comment-btn"
+                  type="button"
+                  onclick="toggleComments('${postId}')"
+                >
 
-                      <h3>
-                        ${name}
-                      </h3>
+                  💬 Comments
 
-                      <span>
-                        ${date}
-                      </span>
+                </button>
 
-                    </div>
+              </div>
 
-                  </div>
 
+              <div
+                class="comments-section"
+                id="comment-section-${postId}"
+                style="display:none"
+              >
 
-                  <div class="post-content">
 
-                    ${content}
+                <div
+                  id="comments-${postId}"
+                  class="comments-list"
+                >
 
-                  </div>
+                  Loading comments...
 
+                </div>
 
-                  <div class="post-actions">
 
-                    <button
+                <form
+                  onsubmit="createComment(event, '${postId}')"
+                  class="comment-form"
+                >
 
-                      class="like-btn"
-
-                      type="button"
-
-                      onclick="toggleLike('${postId}')"
-
-                    >
-
-                      👍 Like (${likes})
-
-                    </button>
-
-
-                    <button
-
-                      class="comment-btn"
-
-                      type="button"
-
-                      onclick="toggleComments('${postId}')"
-
-                    >
-
-                      💬 Comments
-
-                    </button>
-
-                  </div>
-
-
-                  <div
-
-                    class="comments-section"
-
-                    id="comment-section-${postId}"
-
-                    style="display:none"
-
+                  <input
+                    type="text"
+                    id="comment-input-${postId}"
+                    placeholder="Write a comment..."
+                    required
                   >
 
 
-                    <div
+                  <button type="submit">
 
-                      id="comments-${postId}"
+                    Send
 
-                      class="comments-list"
+                  </button>
 
-                    >
-
-                      Loading comments...
-
-                    </div>
+                </form>
 
 
-                    <form
-
-                      onsubmit="createComment(event, '${postId}')"
-
-                      class="comment-form"
-
-                    >
-
-                      <input
-
-                        type="text"
-
-                        id="comment-input-${postId}"
-
-                        placeholder="Write a comment..."
-
-                        required
-
-                      >
+              </div>
 
 
-                      <button type="submit">
+            </article>
 
-                        Send
-
-                      </button>
-
-                    </form>
+          `;
 
 
-                  </div>
-
-                </article>
-
-              `;
-
-
-            }
-
-          )
-
-        );
+        }).join("");
 
 
       postsContainer.innerHTML =
-        postsHTML.join("");
+        postsHTML;
 
 
     },
@@ -640,7 +584,6 @@ function startCommunityPosts() {
 window.toggleComments =
   function(postId) {
 
-
     const section =
       document.getElementById(
         `comment-section-${postId}`
@@ -651,8 +594,7 @@ window.toggleComments =
 
 
     const isHidden =
-      section.style.display ===
-      "none";
+      section.style.display === "none";
 
 
     if (isHidden) {
@@ -679,7 +621,6 @@ window.toggleComments =
 
 window.createComment =
   async function(e, postId) {
-
 
     e.preventDefault();
 
@@ -715,19 +656,13 @@ window.createComment =
 
     try {
 
-
       await addDoc(
 
         collection(
-
           db,
-
           "posts",
-
           postId,
-
           "comments"
-
         ),
 
         {
@@ -786,7 +721,6 @@ window.createComment =
 window.toggleLike =
   async function(postId) {
 
-
     const user =
       currentUser ||
       auth.currentUser;
@@ -813,22 +747,15 @@ window.toggleLike =
 
     const likeRef =
       doc(
-
         db,
-
         "posts",
-
         postId,
-
         "likes",
-
         user.uid
-
       );
 
 
     try {
-
 
       await runTransaction(
 
@@ -863,18 +790,15 @@ window.toggleLike =
 
           const currentLikes =
             Number(
-
               postSnapshot
                 .data()
                 .likes || 0
-
             );
 
 
           if (
             likeSnapshot.exists()
           ) {
-
 
             /* UNLIKE */
 
@@ -892,11 +816,8 @@ window.toggleLike =
                 likes:
 
                   Math.max(
-
                     0,
-
                     currentLikes - 1
-
                   )
 
               }
@@ -905,7 +826,6 @@ window.toggleLike =
 
 
           } else {
-
 
             /* LIKE */
 
@@ -917,7 +837,6 @@ window.toggleLike =
 
                 uid:
                   user.uid,
-
 
                 createdAt:
                   new Date()
@@ -974,6 +893,7 @@ window.ctrlzoneLogin =
 
     e.preventDefault();
 
+
     try {
 
       await signInWithEmailAndPassword(
@@ -991,8 +911,10 @@ window.ctrlzoneLogin =
 
       );
 
+
       location.href =
         "dashboard.html";
+
 
     } catch (error) {
 
@@ -1015,6 +937,7 @@ window.ctrlzoneRegister =
   async function(e) {
 
     e.preventDefault();
+
 
     try {
 
@@ -1064,6 +987,7 @@ window.ctrlzoneRegister =
       location.href =
         "dashboard.html";
 
+
     } catch (error) {
 
       message(
@@ -1091,8 +1015,10 @@ window.googleLogin =
         provider
       );
 
+
       location.href =
         "dashboard.html";
+
 
     } catch (error) {
 
@@ -1160,6 +1086,9 @@ window.createCommunityPost =
       status.textContent =
         "Please log in first.";
 
+      status.style.color =
+        "#ff8a8a";
+
       return;
 
     }
@@ -1172,9 +1101,7 @@ window.createCommunityPost =
     if (!content) return;
 
 
-    button.disabled =
-      true;
-
+    button.disabled = true;
 
     button.textContent =
       "POSTING...";
@@ -1232,13 +1159,22 @@ window.createCommunityPost =
         "Posted successfully! 🔥";
 
 
+      status.style.color =
+        "#5eead4";
+
+
     } catch (error) {
 
       status.textContent =
         error.message;
 
 
+      status.style.color =
+        "#ff8a8a";
+
+
       console.error(error);
+
 
     } finally {
 
@@ -1263,11 +1199,8 @@ async function boot() {
   try {
 
     await setPersistence(
-
       auth,
-
       browserLocalPersistence
-
     );
 
   } catch (error) {
@@ -1284,7 +1217,9 @@ async function boot() {
 
     auth,
 
+
     user => {
+
 
       currentUser = user;
 
