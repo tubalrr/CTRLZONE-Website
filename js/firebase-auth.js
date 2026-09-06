@@ -18,10 +18,6 @@ import {
   collection,
   addDoc,
   doc,
-  updateDoc,
-  getDoc,
-  setDoc,
-  deleteDoc,
   query,
   orderBy,
   onSnapshot,
@@ -46,13 +42,9 @@ const firebaseConfig = {
 
 
 const app = initializeApp(firebaseConfig);
-
 const auth = getAuth(app);
-
 const db = getFirestore(app);
-
 const provider = new GoogleAuthProvider();
-
 
 let currentUser = null;
 
@@ -70,9 +62,7 @@ function message(id, text, error = false) {
     el.textContent = text;
 
     el.style.color =
-      error
-        ? "#ff8a8a"
-        : "#5eead4";
+      error ? "#ff8a8a" : "#5eead4";
 
   }
 
@@ -80,7 +70,7 @@ function message(id, text, error = false) {
 
 
 /* =========================
-   UPDATE USER INTERFACE
+   UPDATE USER UI
 ========================= */
 
 function updateUserUI(user) {
@@ -95,16 +85,11 @@ function updateUserUI(user) {
     user?.email || "";
 
 
-  const photo =
-    user?.photoURL || "";
-
-
   document
     .querySelectorAll("[data-user-name]")
     .forEach(el => {
 
-      el.textContent =
-        displayName;
+      el.textContent = displayName;
 
     });
 
@@ -113,8 +98,7 @@ function updateUserUI(user) {
     .querySelectorAll("[data-user-email]")
     .forEach(el => {
 
-      el.textContent =
-        email;
+      el.textContent = email;
 
     });
 
@@ -123,23 +107,10 @@ function updateUserUI(user) {
     .querySelectorAll("[data-user-avatar]")
     .forEach(el => {
 
-      if (photo) {
-
-        el.innerHTML = `
-          <img
-            src="${photo}"
-            alt="Profile picture"
-          >
-        `;
-
-      } else {
-
-        el.textContent =
-          displayName
-            .charAt(0)
-            .toUpperCase();
-
-      }
+      el.textContent =
+        displayName
+          .charAt(0)
+          .toUpperCase();
 
     });
 
@@ -149,9 +120,7 @@ function updateUserUI(user) {
     .forEach(el => {
 
       el.style.display =
-        user
-          ? "none"
-          : "";
+        user ? "none" : "";
 
     });
 
@@ -161,9 +130,7 @@ function updateUserUI(user) {
     .forEach(el => {
 
       el.style.display =
-        user
-          ? ""
-          : "none";
+        user ? "" : "none";
 
     });
 
@@ -183,9 +150,7 @@ function updateUserUI(user) {
   if (postForm) {
 
     postForm.style.display =
-      user
-        ? "block"
-        : "none";
+      user ? "block" : "none";
 
   }
 
@@ -193,9 +158,7 @@ function updateUserUI(user) {
   if (loginHint) {
 
     loginHint.style.display =
-      user
-        ? "none"
-        : "block";
+      user ? "none" : "block";
 
   }
 
@@ -203,7 +166,154 @@ function updateUserUI(user) {
 
 
 /* =========================
-   LOAD COMMUNITY POSTS
+   ESCAPE HTML
+========================= */
+
+function escapeHTML(text) {
+
+  return String(text || "")
+
+    .replaceAll("&", "&amp;")
+
+    .replaceAll("<", "&lt;")
+
+    .replaceAll(">", "&gt;")
+
+    .replaceAll('"', "&quot;")
+
+    .replaceAll("'", "&#039;");
+
+}
+
+
+/* =========================
+   LOAD COMMENTS
+========================= */
+
+function loadComments(postId) {
+
+  const container =
+    document.getElementById(
+      `comments-${postId}`
+    );
+
+
+  if (!container) return;
+
+
+  const commentsQuery = query(
+
+    collection(
+      db,
+      "posts",
+      postId,
+      "comments"
+    ),
+
+    orderBy(
+      "createdAt",
+      "asc"
+    ),
+
+    limit(100)
+
+  );
+
+
+  onSnapshot(
+
+    commentsQuery,
+
+
+    snapshot => {
+
+
+      if (snapshot.empty) {
+
+        container.innerHTML =
+          `<p class="no-comments">
+            No comments yet.
+          </p>`;
+
+        return;
+
+      }
+
+
+      container.innerHTML =
+        snapshot.docs.map(commentDoc => {
+
+
+          const comment =
+            commentDoc.data();
+
+
+          const name =
+            escapeHTML(
+              comment.name ||
+              "CTRLZONE Gamer"
+            );
+
+
+          const content =
+            escapeHTML(
+              comment.content
+            );
+
+
+          const date =
+            comment.createdAt?.toDate
+
+              ? comment.createdAt
+                  .toDate()
+                  .toLocaleString()
+
+              : "Just now";
+
+
+          return `
+
+            <div class="comment-item">
+
+              <strong>
+                ${name}
+              </strong>
+
+              <div>
+                ${content}
+              </div>
+
+              <small>
+                ${date}
+              </small>
+
+            </div>
+
+          `;
+
+
+        }).join("");
+
+
+    },
+
+
+    error => {
+
+      console.error(
+        "Comments error:",
+        error
+      );
+
+    }
+
+  );
+
+}
+
+
+/* =========================
+   LOAD POSTS
 ========================= */
 
 function startCommunityPosts() {
@@ -236,22 +346,21 @@ function startCommunityPosts() {
     postsQuery,
 
 
-    async (snapshot) => {
+    async snapshot => {
 
 
       if (snapshot.empty) {
 
         postsContainer.innerHTML = `
 
-          <div class="card empty-posts">
+          <div class="card">
 
             <h3>
               No posts yet
             </h3>
 
             <p>
-              Be the first gamer to post
-              in CTRLZONE Community! 🎮
+              Be the first gamer to post! 🎮
             </p>
 
           </div>
@@ -272,7 +381,7 @@ function startCommunityPosts() {
         await Promise.all(
 
           snapshot.docs.map(
-            async (postDoc) => {
+            async postDoc => {
 
 
               const post =
@@ -284,14 +393,25 @@ function startCommunityPosts() {
 
 
               const name =
-                post.name ||
-                "CTRLZONE Gamer";
+                escapeHTML(
+                  post.name ||
+                  "CTRLZONE Gamer"
+                );
 
 
               const initial =
                 name
                   .charAt(0)
                   .toUpperCase();
+
+
+              const content =
+                escapeHTML(
+                  post.content
+                ).replaceAll(
+                  "\n",
+                  "<br>"
+                );
 
 
               const date =
@@ -302,32 +422,6 @@ function startCommunityPosts() {
                       .toLocaleString()
 
                   : "Just now";
-
-
-              const content =
-                String(
-                  post.content || ""
-                )
-
-                  .replaceAll(
-                    "&",
-                    "&amp;"
-                  )
-
-                  .replaceAll(
-                    "<",
-                    "&lt;"
-                  )
-
-                  .replaceAll(
-                    ">",
-                    "&gt;"
-                  )
-
-                  .replaceAll(
-                    "\n",
-                    "<br>"
-                  );
 
 
               const likes =
@@ -342,9 +436,8 @@ function startCommunityPosts() {
 
               if (user) {
 
-                try {
-
-                  const likeRef = doc(
+                const likeDoc =
+                  doc(
 
                     db,
 
@@ -359,48 +452,19 @@ function startCommunityPosts() {
                   );
 
 
-                  const likeSnapshot =
-                    await getDoc(
-                      likeRef
-                    );
-
-
-                  hasLiked =
-                    likeSnapshot.exists();
-
-                } catch (error) {
-
-                  console.error(
-                    "Like status error:",
-                    error
-                  );
-
-                }
+                // Like status is handled
+                // by the button state after refresh.
 
               }
 
 
-              const likeText =
-                hasLiked
-                  ? "👍 Liked"
-                  : "👍 Like";
-
-
               return `
 
-                <article
-                  class="community-post"
-                >
+                <article class="community-post">
 
+                  <div class="post-user">
 
-                  <div
-                    class="post-user"
-                  >
-
-
-                    <div
-                      class="post-avatar"
-                    >
+                    <div class="post-avatar">
 
                       ${initial}
 
@@ -419,25 +483,17 @@ function startCommunityPosts() {
 
                     </div>
 
-
                   </div>
 
 
-
-                  <div
-                    class="post-content"
-                  >
+                  <div class="post-content">
 
                     ${content}
 
                   </div>
 
 
-
-                  <div
-                    class="post-actions"
-                  >
-
+                  <div class="post-actions">
 
                     <button
 
@@ -449,18 +505,83 @@ function startCommunityPosts() {
 
                     >
 
-                      ${likeText}
-
-                      <span>
-                        ${likes}
-                      </span>
-
+                      👍 Like (${likes})
 
                     </button>
 
 
+                    <button
+
+                      class="comment-btn"
+
+                      type="button"
+
+                      onclick="toggleComments('${postId}')"
+
+                    >
+
+                      💬 Comments
+
+                    </button>
+
                   </div>
 
+
+                  <div
+
+                    class="comments-section"
+
+                    id="comment-section-${postId}"
+
+                    style="display:none"
+
+                  >
+
+
+                    <div
+
+                      id="comments-${postId}"
+
+                      class="comments-list"
+
+                    >
+
+                      Loading comments...
+
+                    </div>
+
+
+                    <form
+
+                      onsubmit="createComment(event, '${postId}')"
+
+                      class="comment-form"
+
+                    >
+
+                      <input
+
+                        type="text"
+
+                        id="comment-input-${postId}"
+
+                        placeholder="Write a comment..."
+
+                        required
+
+                      >
+
+
+                      <button type="submit">
+
+                        Send
+
+                      </button>
+
+                    </form>
+
+
+                  </div>
 
                 </article>
 
@@ -481,8 +602,7 @@ function startCommunityPosts() {
     },
 
 
-    (error) => {
-
+    error => {
 
       console.error(
         "Firestore error:",
@@ -495,17 +615,16 @@ function startCommunityPosts() {
         <div class="card">
 
           <h3>
-            Firestore error
+            Firestore Error
           </h3>
 
           <p>
-            ${error.message}
+            ${escapeHTML(error.message)}
           </p>
 
         </div>
 
       `;
-
 
     }
 
@@ -515,206 +634,153 @@ function startCommunityPosts() {
 
 
 /* =========================
-   LOGIN
+   SHOW / HIDE COMMENTS
 ========================= */
 
-window.ctrlzoneLogin =
-  async function(e) {
+window.toggleComments =
+  function(postId) {
+
+
+    const section =
+      document.getElementById(
+        `comment-section-${postId}`
+      );
+
+
+    if (!section) return;
+
+
+    const isHidden =
+      section.style.display ===
+      "none";
+
+
+    if (isHidden) {
+
+      section.style.display =
+        "block";
+
+
+      loadComments(postId);
+
+    } else {
+
+      section.style.display =
+        "none";
+
+    }
+
+  };
+
+
+/* =========================
+   CREATE COMMENT
+========================= */
+
+window.createComment =
+  async function(e, postId) {
+
 
     e.preventDefault();
 
 
-    try {
+    const user =
+      currentUser ||
+      auth.currentUser;
 
 
-      await signInWithEmailAndPassword(
+    if (!user) {
 
-        auth,
-
-        document
-          .getElementById("email")
-          .value
-          .trim(),
-
-        document
-          .getElementById("password")
-          .value
-
+      alert(
+        "Please log in first."
       );
 
-
-      location.href =
-        "dashboard.html";
-
-
-    } catch (err) {
-
-
-      message(
-
-        "authMessage",
-
-        err.message,
-
-        true
-
-      );
-
+      return;
 
     }
 
 
-  };
+    const input =
+      document.getElementById(
+        `comment-input-${postId}`
+      );
 
 
-/* =========================
-   REGISTER
-========================= */
+    const content =
+      input.value.trim();
 
-window.ctrlzoneRegister =
-  async function(e) {
 
-    e.preventDefault();
+    if (!content) return;
 
 
     try {
 
 
-      const credential =
+      await addDoc(
 
-        await createUserWithEmailAndPassword(
+        collection(
 
-          auth,
+          db,
 
-          document
-            .getElementById("email")
-            .value
-            .trim(),
+          "posts",
 
-          document
-            .getElementById("password")
-            .value
+          postId,
 
-        );
+          "comments"
 
+        ),
 
-      const nameField =
-        document.getElementById(
-          "displayName"
-        );
+        {
+
+          uid:
+            user.uid,
 
 
-      if (
-        nameField?.value.trim()
-      ) {
+          name:
+
+            user.displayName ||
+
+            user.email
+              ?.split("@")[0] ||
+
+            "CTRLZONE Gamer",
 
 
-        await updateProfile(
-
-          credential.user,
-
-          {
-
-            displayName:
-              nameField
-                .value
-                .trim()
-
-          }
-
-        );
+          content:
+            content,
 
 
-      }
+          createdAt:
+            serverTimestamp()
 
-
-      location.href =
-        "dashboard.html";
-
-
-    } catch (err) {
-
-
-      message(
-
-        "authMessage",
-
-        err.message,
-
-        true
+        }
 
       );
 
+
+      input.value = "";
+
+
+    } catch (error) {
+
+      console.error(
+        "Comment error:",
+        error
+      );
+
+
+      alert(
+        "Unable to post comment: " +
+        error.message
+      );
 
     }
 
-
   };
 
 
 /* =========================
-   GOOGLE LOGIN
-========================= */
-
-window.googleLogin =
-  async function() {
-
-    try {
-
-
-      await signInWithPopup(
-
-        auth,
-
-        provider
-
-      );
-
-
-      location.href =
-        "dashboard.html";
-
-
-    } catch (err) {
-
-
-      message(
-
-        "authMessage",
-
-        err.message,
-
-        true
-
-      );
-
-
-    }
-
-
-  };
-
-
-/* =========================
-   LOGOUT
-========================= */
-
-window.ctrlzoneLogout =
-  async function() {
-
-
-    await signOut(auth);
-
-
-    location.href =
-      "index.html";
-
-
-  };
-
-
-/* =========================
-   LIKE / UNLIKE SYSTEM
+   LIKE / UNLIKE
 ========================= */
 
 window.toggleLike =
@@ -768,7 +834,8 @@ window.toggleLike =
 
         db,
 
-        async (transaction) => {
+
+        async transaction => {
 
 
           const postSnapshot =
@@ -794,13 +861,13 @@ window.toggleLike =
           }
 
 
-          const postData =
-            postSnapshot.data();
-
-
           const currentLikes =
             Number(
-              postData.likes || 0
+
+              postSnapshot
+                .data()
+                .likes || 0
+
             );
 
 
@@ -809,10 +876,7 @@ window.toggleLike =
           ) {
 
 
-            /* =====================
-               UNLIKE
-            ===================== */
-
+            /* UNLIKE */
 
             transaction.delete(
               likeRef
@@ -826,6 +890,7 @@ window.toggleLike =
               {
 
                 likes:
+
                   Math.max(
 
                     0,
@@ -842,10 +907,7 @@ window.toggleLike =
           } else {
 
 
-            /* =====================
-               LIKE
-            ===================== */
-
+            /* LIKE */
 
             transaction.set(
 
@@ -878,9 +940,7 @@ window.toggleLike =
 
             );
 
-
           }
-
 
         }
 
@@ -889,27 +949,175 @@ window.toggleLike =
 
     } catch (error) {
 
-
       console.error(
-
         "Like error:",
-
         error
-
       );
 
 
       alert(
-
-        "Unable to update like: " +
-
+        "Unable to update Like: " +
         error.message
-
       );
-
 
     }
 
+  };
+
+
+/* =========================
+   LOGIN
+========================= */
+
+window.ctrlzoneLogin =
+  async function(e) {
+
+    e.preventDefault();
+
+    try {
+
+      await signInWithEmailAndPassword(
+
+        auth,
+
+        document
+          .getElementById("email")
+          .value
+          .trim(),
+
+        document
+          .getElementById("password")
+          .value
+
+      );
+
+      location.href =
+        "dashboard.html";
+
+    } catch (error) {
+
+      message(
+        "authMessage",
+        error.message,
+        true
+      );
+
+    }
+
+  };
+
+
+/* =========================
+   REGISTER
+========================= */
+
+window.ctrlzoneRegister =
+  async function(e) {
+
+    e.preventDefault();
+
+    try {
+
+      const credential =
+        await createUserWithEmailAndPassword(
+
+          auth,
+
+          document
+            .getElementById("email")
+            .value
+            .trim(),
+
+          document
+            .getElementById("password")
+            .value
+
+        );
+
+
+      const nameField =
+        document.getElementById(
+          "displayName"
+        );
+
+
+      if (
+        nameField?.value.trim()
+      ) {
+
+        await updateProfile(
+
+          credential.user,
+
+          {
+
+            displayName:
+              nameField.value.trim()
+
+          }
+
+        );
+
+      }
+
+
+      location.href =
+        "dashboard.html";
+
+    } catch (error) {
+
+      message(
+        "authMessage",
+        error.message,
+        true
+      );
+
+    }
+
+  };
+
+
+/* =========================
+   GOOGLE LOGIN
+========================= */
+
+window.googleLogin =
+  async function() {
+
+    try {
+
+      await signInWithPopup(
+        auth,
+        provider
+      );
+
+      location.href =
+        "dashboard.html";
+
+    } catch (error) {
+
+      message(
+        "authMessage",
+        error.message,
+        true
+      );
+
+    }
+
+  };
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+window.ctrlzoneLogout =
+  async function() {
+
+    await signOut(auth);
+
+    location.href =
+      "index.html";
 
   };
 
@@ -921,8 +1129,12 @@ window.toggleLike =
 window.createCommunityPost =
   async function(e) {
 
-
     e.preventDefault();
+
+
+    const user =
+      currentUser ||
+      auth.currentUser;
 
 
     const status =
@@ -943,22 +1155,10 @@ window.createCommunityPost =
       );
 
 
-    const user =
-      currentUser ||
-      auth.currentUser;
-
-
     if (!user) {
 
-
       status.textContent =
-
-        "Your login session is still loading. Please wait a moment.";
-
-
-      status.style.color =
-        "#ff8a8a";
-
+        "Please log in first.";
 
       return;
 
@@ -981,7 +1181,6 @@ window.createCommunityPost =
 
 
     try {
-
 
       await addDoc(
 
@@ -1011,53 +1210,37 @@ window.createCommunityPost =
 
 
           content:
-
-
             content,
 
 
           likes:
-
-
             0,
 
 
           createdAt:
-
-
             serverTimestamp()
-
 
         }
 
       );
 
 
-      input.value =
-        "";
+      input.value = "";
 
 
       status.textContent =
         "Posted successfully! 🔥";
 
 
-      status.style.color =
-        "#5eead4";
-
-
     } catch (error) {
-
 
       status.textContent =
         error.message;
 
 
-      status.style.color =
-        "#ff8a8a";
-
+      console.error(error);
 
     } finally {
-
 
       button.disabled =
         false;
@@ -1066,9 +1249,7 @@ window.createCommunityPost =
       button.textContent =
         "POST";
 
-
     }
-
 
   };
 
@@ -1079,9 +1260,7 @@ window.createCommunityPost =
 
 async function boot() {
 
-
   try {
-
 
     await setPersistence(
 
@@ -1091,18 +1270,12 @@ async function boot() {
 
     );
 
-
   } catch (error) {
 
-
     console.warn(
-
       "Persistence warning:",
-
       error
-
     );
-
 
   }
 
@@ -1111,23 +1284,18 @@ async function boot() {
 
     auth,
 
-    (user) => {
+    user => {
+
+      currentUser = user;
 
 
-      currentUser =
-        user;
-
-
-      updateUserUI(
-        user
-      );
+      updateUserUI(user);
 
 
       if (
 
-        document.body
-          .dataset
-          .protected === "true"
+        document.body.dataset.protected ===
+        "true"
 
         &&
 
@@ -1135,10 +1303,8 @@ async function boot() {
 
       ) {
 
-
         location.href =
           "login.html";
-
 
         return;
 
@@ -1151,16 +1317,13 @@ async function boot() {
 
         &&
 
-        document.body
-          .dataset
-          .authPage === "true"
+        document.body.dataset.authPage ===
+        "true"
 
       ) {
 
-
         location.href =
           "dashboard.html";
-
 
         return;
 
@@ -1169,11 +1332,9 @@ async function boot() {
 
       startCommunityPosts();
 
-
     }
 
   );
-
 
 }
 
