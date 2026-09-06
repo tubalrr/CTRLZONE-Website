@@ -20,7 +20,33 @@
   <div class="side-bottom"><a href="login.html">🔐 Login</a></div>
 </aside>
 
-<main><header class="topbar"><button class="menu-btn" onclick="toggleMenu()">☰</button><div class="status">● ONLINE</div><a href="dashboard.html" class="profile">👤</a></header>
-<section class="page-head"><div class="badge">CTRLZONE</div><h1>Dashboard</h1><p>Welcome, <span id="userName">Gamer</span>.</p><button class="btn ghost" onclick="ctrlzoneLogout()">LOGOUT</button></section><div class="stats"><div class="stat"><b>0</b><span>Posts</span></div><div class="stat"><b>0</b><span>Events</span></div><div class="stat"><b>0</b><span>Videos</span></div></div><div class="card"><h3>Welcome, Gamer!</h3><p>This is a front-end demo dashboard. Connect a backend/database later for real accounts and data.</p></div>
+<main><header class="topbar"><button class="menu-btn" onclick="toggleMenu()">☰</button><div class="status">● ONLINE</div><a href="dashboard.html" class="profile" title="My CTRLZONE"><span data-user-avatar>G</span></a></header>
+<section class="page-head">
+      <div class="badge">MY CTRLZONE</div>
+      <h1>Dashboard</h1>
+      <p>Welcome back, <span data-user-name>Gamer</span>.</p>
+    </section>
+    <section class="dashboard-profile">
+      <div class="profile-card">
+        <div class="avatar-large" data-user-avatar>G</div>
+        <div>
+          <h2 data-user-name>Gamer</h2>
+          <p data-user-email></p>
+          <span class="online-label">● AUTHENTICATED</span>
+        </div>
+        <button class="btn ghost logout-btn" onclick="ctrlzoneLogout()">LOGOUT</button>
+      </div>
+    </section>
+    <section>
+      <div class="stats">
+        <div class="stat"><b>0</b><span>Posts</span></div>
+        <div class="stat"><b>0</b><span>Events</span></div>
+        <div class="stat"><b>0</b><span>Videos</span></div>
+      </div>
+      <div class="card dashboard-card">
+        <h3>Your CTRLZONE Account</h3>
+        <p>Your account is now authenticated with Firebase. Community posts, profiles, and other saved data can be added later using Firestore.</p>
+      </div>
+    </section>
 <footer>© 2026 CTRLZONE — All-in-One Gaming Platform</footer>
 </main><script src="js/script.js"></script><script type="module" src="js/firebase-auth.js"></script></body></html>
