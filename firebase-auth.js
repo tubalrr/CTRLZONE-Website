@@ -1,0 +1,830 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+
+import {
+  getAuth,
+  setPersistence,
+  browserLocalPersistence,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged,
+  signOut,
+  updateProfile
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  doc,
+  updateDoc,
+  increment,
+  query,
+  orderBy,
+  onSnapshot,
+  serverTimestamp,
+  limit
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDZ9dqwfUbKGSNq9YK96voy-vUiC-dkg5c",
+  authDomain: "ctrlzone-50db8.firebaseapp.com",
+  projectId: "ctrlzone-50db8",
+  storageBucket: "ctrlzone-50db8.firebasestorage.app",
+  messagingSenderId: "961266035107",
+  appId: "1:961266035107:web:03c628e259d317013b9216"
+};
+
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+const provider = new GoogleAuthProvider();
+
+
+let currentUser = null;
+
+
+function message(id, text, error = false) {
+
+  const el = document.getElementById(id);
+
+  if (el) {
+
+    el.textContent = text;
+
+    el.style.color = error ? "#ff8a8a" : "#5eead4";
+
+  }
+
+}
+
+
+function updateUserUI(user) {
+
+  const displayName =
+    user?.displayName ||
+    user?.email?.split("@")[0] ||
+    "CTRLZONE Gamer";
+
+  const email = user?.email || "";
+
+  const photo = user?.photoURL || "";
+
+
+  document
+    .querySelectorAll("[data-user-name]")
+    .forEach(el => el.textContent = displayName);
+
+
+  document
+    .querySelectorAll("[data-user-email]")
+    .forEach(el => el.textContent = email);
+
+
+  document
+    .querySelectorAll("[data-user-avatar]")
+    .forEach(el => {
+
+      if (photo) {
+
+        el.innerHTML =
+          `<img src="${photo}" alt="Profile picture">`;
+
+      } else {
+
+        el.textContent =
+          displayName.charAt(0).toUpperCase();
+
+      }
+
+    });
+
+
+  document
+    .querySelectorAll("[data-auth-login]")
+    .forEach(el => {
+
+      el.style.display =
+        user ? "none" : "";
+
+    });
+
+
+  document
+    .querySelectorAll("[data-auth-user]")
+    .forEach(el => {
+
+      el.style.display =
+        user ? "" : "none";
+
+    });
+
+
+  const postForm =
+    document.getElementById("communityPostForm");
+
+
+  const loginHint =
+    document.querySelector(".login-hint");
+
+
+  if (postForm) {
+
+    postForm.style.display =
+      user ? "block" : "none";
+
+  }
+
+
+  if (loginHint) {
+
+    loginHint.style.display =
+      user ? "none" : "block";
+
+  }
+
+}
+
+
+
+function startCommunityPosts() {
+
+  const postsContainer =
+    document.getElementById("communityPosts");
+
+
+  if (!postsContainer) return;
+
+
+  const postsQuery = query(
+
+    collection(db, "posts"),
+
+    orderBy("createdAt", "desc"),
+
+    limit(50)
+
+  );
+
+
+  onSnapshot(
+    postsQuery,
+
+    (snapshot) => {
+
+
+      if (snapshot.empty) {
+
+        postsContainer.innerHTML = `
+
+        <div class="card empty-posts">
+
+          <h3>No posts yet</h3>
+
+          <p>
+            Be the first gamer to post in
+            CTRLZONE Community! 🎮
+          </p>
+
+        </div>
+
+        `;
+
+        return;
+
+      }
+
+
+
+      postsContainer.innerHTML =
+        snapshot.docs.map((doc) => {
+
+
+          const post = doc.data();
+
+
+          const name =
+            post.name ||
+            "CTRLZONE Gamer";
+
+
+          const initial =
+            name.charAt(0).toUpperCase();
+
+
+          const date =
+            post.createdAt?.toDate
+
+              ? post.createdAt
+                  .toDate()
+                  .toLocaleString()
+
+              : "Just now";
+
+
+          const content =
+            String(post.content || "")
+
+              .replaceAll("&", "&amp;")
+
+              .replaceAll("<", "&lt;")
+
+              .replaceAll(">", "&gt;")
+
+              .replaceAll("\n", "<br>");
+
+
+          const likes =
+            Number(post.likes || 0);
+
+
+
+          return `
+
+          <article class="community-post">
+
+
+            <div class="post-user">
+
+
+              <div class="post-avatar">
+
+                ${initial}
+
+              </div>
+
+
+              <div>
+
+                <h3>${name}</h3>
+
+                <span>${date}</span>
+
+              </div>
+
+
+            </div>
+
+
+
+            <div class="post-content">
+
+              ${content}
+
+            </div>
+
+
+
+            <div class="post-actions">
+
+
+              <button
+
+                class="like-btn"
+
+                type="button"
+
+                onclick="toggleLike('${doc.id}')"
+
+              >
+
+                👍
+
+                <span>${likes}</span>
+
+                Like${likes === 1 ? "" : "s"}
+
+              </button>
+
+
+            </div>
+
+
+          </article>
+
+          `;
+
+
+        }).join("");
+
+
+    },
+
+
+    (error) => {
+
+
+      postsContainer.innerHTML = `
+
+      <div class="card">
+
+        <h3>Firestore error</h3>
+
+        <p>${error.message}</p>
+
+      </div>
+
+      `;
+
+
+    }
+
+  );
+
+}
+
+
+
+window.ctrlzoneLogin = async function(e) {
+
+  e.preventDefault();
+
+
+  try {
+
+
+    await signInWithEmailAndPassword(
+
+      auth,
+
+      document
+        .getElementById("email")
+        .value
+        .trim(),
+
+      document
+        .getElementById("password")
+        .value
+
+    );
+
+
+    location.href =
+      "dashboard.html";
+
+
+  } catch (err) {
+
+
+    message(
+
+      "authMessage",
+
+      err.message,
+
+      true
+
+    );
+
+
+  }
+
+};
+
+
+
+window.ctrlzoneRegister = async function(e) {
+
+  e.preventDefault();
+
+
+  try {
+
+
+    const credential =
+
+      await createUserWithEmailAndPassword(
+
+        auth,
+
+        document
+          .getElementById("email")
+          .value
+          .trim(),
+
+        document
+          .getElementById("password")
+          .value
+
+      );
+
+
+    const nameField =
+      document.getElementById("displayName");
+
+
+    if (nameField?.value.trim()) {
+
+
+      await updateProfile(
+
+        credential.user,
+
+        {
+
+          displayName:
+            nameField.value.trim()
+
+        }
+
+      );
+
+
+    }
+
+
+    location.href =
+      "dashboard.html";
+
+
+  } catch (err) {
+
+
+    message(
+
+      "authMessage",
+
+      err.message,
+
+      true
+
+    );
+
+
+  }
+
+};
+
+
+
+window.googleLogin = async function() {
+
+  try {
+
+
+    await signInWithPopup(
+
+      auth,
+
+      provider
+
+    );
+
+
+    location.href =
+      "dashboard.html";
+
+
+  } catch (err) {
+
+
+    message(
+
+      "authMessage",
+
+      err.message,
+
+      true
+
+    );
+
+
+  }
+
+};
+
+
+
+window.ctrlzoneLogout = async function() {
+
+
+  await signOut(auth);
+
+
+  location.href =
+    "index.html";
+
+
+};
+
+
+
+/* =========================
+   LIKE SYSTEM
+========================= */
+
+
+window.toggleLike = async function(postId) {
+
+
+  const user =
+    currentUser ||
+    auth.currentUser;
+
+
+  if (!user) {
+
+
+    alert(
+      "Please log in first to like a post."
+    );
+
+
+    return;
+
+  }
+
+
+  try {
+
+
+    await updateDoc(
+
+      doc(db, "posts", postId),
+
+      {
+
+        likes: increment(1)
+
+      }
+
+    );
+
+
+  } catch (error) {
+
+
+    console.error(error);
+
+
+    alert(
+
+      "Unable to like this post: " +
+
+      error.message
+
+    );
+
+
+  }
+
+
+};
+
+
+
+/* =========================
+   CREATE POST
+========================= */
+
+
+window.createCommunityPost =
+  async function(e) {
+
+
+    e.preventDefault();
+
+
+    const status =
+      document.getElementById("postStatus");
+
+
+    const input =
+      document.getElementById("postContent");
+
+
+    const button =
+      document.getElementById("postButton");
+
+
+    const user =
+      currentUser ||
+      auth.currentUser;
+
+
+
+    if (!user) {
+
+
+      status.textContent =
+
+        "Your login session is still loading. Please wait a moment.";
+
+
+      status.style.color =
+        "#ff8a8a";
+
+
+      return;
+
+    }
+
+
+
+    const content =
+      input.value.trim();
+
+
+    if (!content) return;
+
+
+
+    button.disabled = true;
+
+
+    button.textContent =
+      "POSTING...";
+
+
+
+    try {
+
+
+      await addDoc(
+
+        collection(db, "posts"),
+
+        {
+
+          uid: user.uid,
+
+
+          name:
+
+            user.displayName ||
+
+            user.email?.split("@")[0] ||
+
+            "CTRLZONE Gamer",
+
+
+          email:
+
+            user.email || "",
+
+
+          content,
+
+
+          likes: 0,
+
+
+          createdAt:
+
+            serverTimestamp()
+
+        }
+
+      );
+
+
+
+      input.value = "";
+
+
+      status.textContent =
+        "Posted successfully! 🔥";
+
+
+      status.style.color =
+        "#5eead4";
+
+
+    } catch (error) {
+
+
+      status.textContent =
+        error.message;
+
+
+      status.style.color =
+        "#ff8a8a";
+
+
+    } finally {
+
+
+      button.disabled = false;
+
+
+      button.textContent =
+        "POST";
+
+
+    }
+
+
+  };
+
+
+
+/* =========================
+   START FIREBASE
+========================= */
+
+
+async function boot() {
+
+
+  try {
+
+
+    await setPersistence(
+
+      auth,
+
+      browserLocalPersistence
+
+    );
+
+
+  } catch (error) {
+
+
+    console.warn(
+
+      "Persistence warning:",
+
+      error
+
+    );
+
+
+  }
+
+
+
+  onAuthStateChanged(
+
+    auth,
+
+    (user) => {
+
+
+      currentUser = user;
+
+
+      updateUserUI(user);
+
+
+
+      if (
+
+        document.body.dataset.protected === "true"
+
+        &&
+
+        !user
+
+      ) {
+
+
+        location.href =
+          "login.html";
+
+
+        return;
+
+      }
+
+
+
+      if (
+
+        user
+
+        &&
+
+        document.body.dataset.authPage === "true"
+
+      ) {
+
+
+        location.href =
+          "dashboard.html";
+
+
+        return;
+
+      }
+
+
+
+      startCommunityPosts();
+
+
+    }
+
+  );
+
+
+}
+
+
+boot();
