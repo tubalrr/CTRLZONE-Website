@@ -23,3 +23,29 @@ footer{text-align:center;color:#667085;padding:30px;border-top:1px solid #202b42
 .profile-card h2{margin:0 0 8px}.profile-card p{margin:0;color:#94a3b8}.online-label{display:inline-block;margin-top:10px;font-size:11px;letter-spacing:1px;color:#5eead4}
 .logout-btn{margin-left:auto}.dashboard-card{max-width:1130px;margin:20px auto 0}
 @media(max-width:700px){.profile-card{flex-wrap:wrap}.logout-btn{width:100%;margin-left:0}}
+
+
+/* Firestore Community */
+.community-wrap{max-width:900px;margin:0 auto;padding:0 20px 50px}
+.create-post-card{padding:22px;margin-bottom:28px}
+.create-post-header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.create-post-header h3{margin:0 0 4px}
+.create-post-header span{font-size:13px;color:#94a3b8}
+.small-avatar,.post-avatar{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#28d7ff,#8b5cf6);color:#071018;font-weight:900;overflow:hidden}
+.small-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+#create-post-form{display:block}
+#postContent{width:100%;min-height:115px;resize:vertical;border-radius:12px;border:1px solid #2c4864;background:#0f1725;color:#e5edf7;padding:15px;font:inherit;box-sizing:border-box}
+#postContent:focus{outline:none;border-color:#36c8ec;box-shadow:0 0 0 3px rgba(54,200,236,.08)}
+.post-actions{display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:15px}
+#postStatus{font-size:13px}
+.login-hint{margin:14px 0 0;color:#94a3b8;font-size:13px}
+.login-hint a{color:#5eead4}
+.community-title{display:flex;justify-content:space-between;align-items:center;margin:10px 0 14px}
+.community-title h2{margin:0}.community-title span{font-size:12px;color:#5eead4}
+.community-posts{display:grid;gap:14px}
+.community-post{background:#151f30;border:1px solid #2a3a55;border-radius:16px;padding:20px}
+.post-user{display:flex;align-items:center;gap:12px}
+.post-user h3{margin:0 0 3px;font-size:16px}.post-user span{font-size:12px;color:#8b9bb0}
+.post-content{margin-top:16px;line-height:1.65;color:#d8e2ee;word-break:break-word}
+.empty-posts{text-align:center;padding:30px}
+@media(max-width:600px){.community-wrap{padding:0 12px 35px}.community-title{align-items:flex-start;gap:8px;flex-direction:column}.post-actions{align-items:flex-start;flex-direction:column}.post-actions .btn{width:100%}}
