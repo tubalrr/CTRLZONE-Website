@@ -1,83 +1,36 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Community | CTRLZONE</title>
-<link rel="stylesheet" href="css/style.css">
-</head>
-<body data-protected="true">
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Community | CTRLZONE</title><link rel="stylesheet" href="css/style.css">
+</head><body data-protected="true" >
 <aside class="sidebar">
   <a class="brand" href="index.html"><span>CTRL</span>ZONE</a>
   <nav>
-    <a href="index.html">⌂ <span>Home</span></a>
-    <a href="games.html">🎮 <span>Games</span></a>
-    <a href="streams.html">🔴 <span>Live</span></a>
-    <a href="videos.html">▶ <span>Videos</span></a>
-    <a class="active" href="community.html">👥 <span>Community</span></a>
-    <a href="events.html">🏆 <span>Events</span></a>
-    <a href="news.html">📰 <span>News</span></a>
-    <a href="gallery.html">🖼 <span>Gallery</span></a>
-    <a href="spin.html">🎡 <span>CTRL Spin</span></a>
-  </nav>
-  <div class="side-bottom">
-    <a href="login.html" data-auth-login>🔐 Login</a>
-    <a href="dashboard.html" data-auth-user style="display:none">👤 My Account</a>
-  </div>
+  <a href="index.html">⌂ <span>Home</span></a>
+  <a href="games.html" >🎮 <span>Games</span></a>
+  <a href="streams.html" >🔴 <span>Live</span></a>
+  <a href="videos.html" >▶ <span>Videos</span></a>
+  <a href="community.html" class="active">👥 <span>Community</span></a>
+  <a href="events.html" >🏆 <span>Events</span></a>
+  <a href="news.html" >📰 <span>News</span></a>
+  <a href="gallery.html" >🖼 <span>Gallery</span></a>
+  <a href="spin.html" >🎡 <span>CTRL Spin</span></a>
+</nav>
+  <div class="side-bottom"><a href="login.html" data-auth-login>🔐 Login</a><a href="dashboard.html" data-auth-user style="display:none">👤 My Account</a></div>
 </aside>
-
-<main>
-<header class="topbar">
-  <button class="menu-btn" onclick="toggleMenu()">☰</button>
-  <div class="status">● ONLINE</div>
-  <a href="dashboard.html" class="profile" title="My CTRLZONE"><span data-user-avatar>G</span></a>
-</header>
-
-<section class="page-head">
-  <div class="badge">CTRLZONE COMMUNITY</div>
-  <h1>Community</h1>
-  <p>Share your gaming moments with fellow gamers.</p>
-</section>
-
+<main><header class="topbar"><button class="menu-btn" onclick="toggleMenu()">☰</button><div class="status">● ONLINE</div><a href="dashboard.html" class="profile"><span data-user-avatar>G</span></a></header>
+<section class="page-head"><div class="badge">CTRLZONE COMMUNITY</div><h1>Community</h1><p>Share your gaming moments with fellow gamers.</p></section>
 <section class="community-wrap">
   <div class="card create-post-card">
-    <div class="create-post-header">
-      <div class="small-avatar" data-user-avatar>G</div>
-      <div>
-        <h3 data-user-name>CTRLZONE Gamer</h3>
-        <span data-user-email>Login to start posting</span>
-      </div>
-    </div>
-
+    <div class="create-post-header"><div class="small-avatar" data-user-avatar>G</div><div><h3 data-user-name>CTRLZONE Gamer</h3><span data-user-email>Login to start posting</span></div></div>
     <form id="communityPostForm" onsubmit="createCommunityPost(event)" style="display:none">
       <textarea id="postContent" maxlength="1000" placeholder="What's happening in your game?" required></textarea>
-      <div class="post-actions">
-        <span id="postStatus"></span>
-        <button id="postButton" class="btn" type="submit">POST</button>
-      </div>
+      <div class="post-actions"><span id="postStatus"></span><button id="postButton" class="btn" type="submit">POST</button></div>
     </form>
-
-    <p class="login-hint" data-auth-login>
-      You need to <a href="login.html">log in</a> before posting.
-    </p>
+    <p class="login-hint" data-auth-login>You need to <a href="login.html">log in</a> before posting.</p>
   </div>
-
-  <div class="community-title">
-    <h2>Latest Posts</h2>
-    <span>Live from Firestore 🔥</span>
-  </div>
-
-  <div id="communityPosts" class="community-posts">
-    <div class="card empty-posts">
-      <h3>Loading posts...</h3>
-    </div>
-  </div>
+  <div class="community-title"><h2>Latest Posts</h2><span>Live from Firestore 🔥</span></div>
+  <div id="communityPosts" class="community-posts"><div class="card empty-posts"><h3>Loading posts...</h3></div></div>
 </section>
-
 <footer>© 2026 CTRLZONE — All-in-One Gaming Platform</footer>
-</main>
-
-<script src="js/script.js"></script>
-<script type="module" src="js/firebase-auth.js"></script>
-</body>
-</html>
+</main><script src="js/script.js"></script><script type="module" src="js/firebase-auth.js"></script></body></html>

@@ -1,30 +1,25 @@
 <!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Live Streams | CTRLZONE</title><link rel="stylesheet" href="css/style.css">
+<title>Live | CTRLZONE</title><link rel="stylesheet" href="css/style.css">
 </head><body>
-
 <aside class="sidebar">
   <a class="brand" href="index.html"><span>CTRL</span>ZONE</a>
   <nav>
-    <a href="index.html">⌂ <span>Home</span></a>
-    <a href="games.html">🎮 <span>Games</span></a>
-    <a href="streams.html">🔴 <span>Live</span></a>
-    <a href="videos.html">▶ <span>Videos</span></a>
-    <a href="community.html">👥 <span>Community</span></a>
-    <a href="events.html">🏆 <span>Events</span></a>
-    <a href="news.html">📰 <span>News</span></a>
-    <a href="gallery.html">🖼 <span>Gallery</span></a>
-    <a href="spin.html">🎡 <span>CTRL Spin</span></a>
+    <a href="index.html" >⌂ <span>Home</span></a>
+    <a href="games.html" >🎮 <span>Games</span></a>
+    <a href="streams.html" class="active">🔴 <span>Live</span></a>
+    <a href="videos.html" >▶ <span>Videos</span></a>
+    <a href="community.html" >👥 <span>Community</span></a>
+    <a href="events.html" >🏆 <span>Events</span></a>
+    <a href="news.html" >📰 <span>News</span></a>
+    <a href="gallery.html" >🖼 <span>Gallery</span></a>
+    <a href="spin.html" >🎡 <span>CTRL Spin</span></a>
   </nav>
-  <div class="side-bottom"><a href="login.html">🔐 Login</a></div>
+  <div class="side-bottom"><a href="login.html" data-auth-login>🔐 Login</a><a href="dashboard.html" data-auth-user style="display:none">👤 My Account</a></div>
 </aside>
-
 <main><header class="topbar"><button class="menu-btn" onclick="toggleMenu()">☰</button><div class="status">● ONLINE</div><a href="dashboard.html" class="profile" title="My CTRLZONE"><span data-user-avatar>G</span></a></header>
-<section class="page-head"><div class="badge">CTRLZONE</div><h1>Live Streams</h1><p>Watch your favorite gaming streams.</p></section><div class="grid cards">
-    <article class="card"><div class="placeholder">🎮</div><h3>Featured Content</h3><p>Customize this section with your own content.</p></article>
-    <article class="card"><div class="placeholder">🔥</div><h3>Trending</h3><p>Show trending games, videos or posts.</p></article>
-    <article class="card"><div class="placeholder">⚡</div><h3>CTRLZONE Community</h3><p>Build your gaming community here.</p></article>
-    </div>
+<section class="page-head"><div class="badge">LIVE NOW</div><h1>Live Streams</h1><p>Watch gamers live inside CTRLZONE.</p></section>
+<div class="grid cards"><article class="card"><div class="placeholder">🔴 LIVE</div><h3>MLBB Rank Push</h3><p>Live now - Join the squad.</p><button class="btn small">Watch</button></article><article class="card"><div class="placeholder">🔴 LIVE</div><h3>PUBG Customs</h3><p>Custom room with viewers.</p><button class="btn small">Watch</button></article><article class="card"><div class="placeholder">⚫ OFFLINE</div><h3>ETS2 Chill Drive</h3><p>Replay available.</p><button class="btn small ghost">Replay</button></article></div>
 <footer>© 2026 CTRLZONE — All-in-One Gaming Platform</footer>
-</main><script src="js/script.js"></script></body></html>
+</main><script src="js/script.js"></script><script type="module" src="js/firebase-auth.js"></script></body></html>
