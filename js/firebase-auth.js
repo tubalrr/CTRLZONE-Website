@@ -43,9 +43,13 @@ const firebaseConfig = {
 
 
 const app = initializeApp(firebaseConfig);
+
 const auth = getAuth(app);
+
 const db = getFirestore(app);
+
 const provider = new GoogleAuthProvider();
+
 
 let currentUser = null;
 
@@ -59,15 +63,37 @@ function message(id, text, error = false) {
   const el = document.getElementById(id);
 
   if (el) {
+
     el.textContent = text;
-    el.style.color = error ? "#ff8a8a" : "#5eead4";
+
+    el.style.color =
+      error
+        ? "#ff8a8a"
+        : "#5eead4";
+
   }
 
 }
 
 
 /* =========================
-   UPDATE USER UI
+   ESCAPE HTML
+========================= */
+
+function escapeHTML(text) {
+
+  return String(text || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+}
+
+
+/* =========================
+   UPDATE USER INTERFACE
 ========================= */
 
 function updateUserUI(user) {
@@ -77,8 +103,10 @@ function updateUserUI(user) {
     user?.email?.split("@")[0] ||
     "CTRLZONE Gamer";
 
+
   const email =
     user?.email || "";
+
 
   const photo =
     user?.photoURL || "";
@@ -102,8 +130,6 @@ function updateUserUI(user) {
     });
 
 
-  /* PROFILE PICTURE */
-
   document
     .querySelectorAll("[data-user-avatar]")
     .forEach(el => {
@@ -113,7 +139,7 @@ function updateUserUI(user) {
         el.innerHTML = `
           <img
             src="${photo}"
-            alt="Profile Picture"
+            alt="Profile picture"
             style="
               width:100%;
               height:100%;
@@ -141,7 +167,9 @@ function updateUserUI(user) {
     .forEach(el => {
 
       el.style.display =
-        user ? "none" : "";
+        user
+          ? "none"
+          : "";
 
     });
 
@@ -151,23 +179,31 @@ function updateUserUI(user) {
     .forEach(el => {
 
       el.style.display =
-        user ? "" : "none";
+        user
+          ? ""
+          : "none";
 
     });
 
 
   const postForm =
-    document.getElementById("communityPostForm");
+    document.getElementById(
+      "communityPostForm"
+    );
 
 
   const loginHint =
-    document.querySelector(".login-hint");
+    document.querySelector(
+      ".login-hint"
+    );
 
 
   if (postForm) {
 
     postForm.style.display =
-      user ? "block" : "none";
+      user
+        ? "block"
+        : "none";
 
   }
 
@@ -175,25 +211,11 @@ function updateUserUI(user) {
   if (loginHint) {
 
     loginHint.style.display =
-      user ? "none" : "block";
+      user
+        ? "none"
+        : "block";
 
   }
-
-}
-
-
-/* =========================
-   ESCAPE HTML
-========================= */
-
-function escapeHTML(text) {
-
-  return String(text || "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
 
 }
 
@@ -237,7 +259,7 @@ function loadComments(postId) {
     commentsQuery,
 
 
-    snapshot => {
+    (snapshot) => {
 
 
       if (snapshot.empty) {
@@ -254,7 +276,8 @@ function loadComments(postId) {
 
 
       container.innerHTML =
-        snapshot.docs.map(commentDoc => {
+        snapshot.docs.map((commentDoc) => {
+
 
           const comment =
             commentDoc.data();
@@ -291,9 +314,9 @@ function loadComments(postId) {
                 ${name}
               </strong>
 
-              <div>
+              <p>
                 ${content}
-              </div>
+              </p>
 
               <small>
                 ${date}
@@ -303,13 +326,14 @@ function loadComments(postId) {
 
           `;
 
+
         }).join("");
 
 
     },
 
 
-    error => {
+    (error) => {
 
       console.error(
         "Comments error:",
@@ -318,272 +342,10 @@ function loadComments(postId) {
 
 
       container.innerHTML = `
+
         <p class="no-comments">
           Unable to load comments.
         </p>
-      `;
-
-    }
-
-  );
-
-}
-
-
-/* =========================
-   LOAD POSTS
-========================= */
-
-function startCommunityPosts() {
-
-  const postsContainer =
-    document.getElementById(
-      "communityPosts"
-    );
-
-
-  if (!postsContainer) return;
-
-
-  const postsQuery = query(
-
-    collection(db, "posts"),
-
-    orderBy(
-      "createdAt",
-      "desc"
-    ),
-
-    limit(50)
-
-  );
-
-
-  onSnapshot(
-
-    postsQuery,
-
-
-    snapshot => {
-
-
-      if (snapshot.empty) {
-
-        postsContainer.innerHTML = `
-
-          <div class="card">
-
-            <h3>No posts yet</h3>
-
-            <p>
-              Be the first gamer to post! 🎮
-            </p>
-
-          </div>
-
-        `;
-
-        return;
-
-      }
-
-
-      const postsHTML =
-        snapshot.docs.map(postDoc => {
-
-
-          const post =
-            postDoc.data();
-
-
-          const postId =
-            postDoc.id;
-
-
-          const name =
-            escapeHTML(
-              post.name ||
-              "CTRLZONE Gamer"
-            );
-
-
-          const initial =
-            name.charAt(0).toUpperCase();
-
-
-          const content =
-            escapeHTML(
-              post.content
-            ).replaceAll(
-              "\n",
-              "<br>"
-            );
-
-
-          const date =
-            post.createdAt?.toDate
-
-              ? post.createdAt
-                  .toDate()
-                  .toLocaleString()
-
-              : "Just now";
-
-
-          const likes =
-            Number(
-              post.likes || 0
-            );
-
-
-          return `
-
-            <article class="community-post">
-
-              <div class="post-user">
-
-                <div class="post-avatar">
-
-                  ${initial}
-
-                </div>
-
-
-                <div>
-
-                  <h3>
-                    ${name}
-                  </h3>
-
-                  <span>
-                    ${date}
-                  </span>
-
-                </div>
-
-              </div>
-
-
-              <div class="post-content">
-
-                ${content}
-
-              </div>
-
-
-              <div class="post-actions">
-
-                <button
-                  class="like-btn"
-                  type="button"
-                  onclick="toggleLike('${postId}')"
-                >
-
-                  👍 Like (${likes})
-
-                </button>
-
-
-                <!-- COMMENTS BUTTON -->
-
-                <button
-                  class="comment-btn"
-                  type="button"
-                  onclick="toggleComments('${postId}')"
-                >
-
-                  💬 Comments
-
-                </button>
-
-              </div>
-
-
-              <!-- COMMENTS SECTION -->
-
-              <div
-                class="comments-section"
-                id="comment-section-${postId}"
-                style="display:none;"
-              >
-
-
-                <div
-                  id="comments-${postId}"
-                  class="comments-list"
-                >
-
-                  <p class="no-comments">
-                    Loading comments...
-                  </p>
-
-                </div>
-
-
-                <form
-                  onsubmit="createComment(event, '${postId}')"
-                  class="comment-form"
-                >
-
-                  <input
-                    type="text"
-                    id="comment-input-${postId}"
-                    placeholder="Write a comment..."
-                    autocomplete="off"
-                    required
-                  >
-
-
-                  <button
-                    type="submit"
-                  >
-
-                    Send
-
-                  </button>
-
-                </form>
-
-
-              </div>
-
-
-            </article>
-
-          `;
-
-
-        }).join("");
-
-
-      postsContainer.innerHTML =
-        postsHTML;
-
-
-    },
-
-
-    error => {
-
-      console.error(
-        "Firestore error:",
-        error
-      );
-
-
-      postsContainer.innerHTML = `
-
-        <div class="card">
-
-          <h3>
-            Firestore Error
-          </h3>
-
-          <p>
-            ${escapeHTML(error.message)}
-          </p>
-
-        </div>
 
       `;
 
@@ -596,60 +358,55 @@ function startCommunityPosts() {
 
 /* =========================
    SHOW / HIDE COMMENTS
-   UPDATED FIX
 ========================= */
 
-window.toggleComments = function(postId) {
-
-  console.log(
-    "Comments clicked:",
-    postId
-  );
+window.toggleComments =
+  function(postId) {
 
 
-  const section =
-    document.getElementById(
-      "comment-section-" + postId
-    );
+    const section =
+      document.getElementById(
+        "comment-section-" + postId
+      );
 
 
-  if (!section) {
+    if (!section) {
 
-    console.error(
-      "Comment section not found:",
-      postId
-    );
+      console.error(
+        "Comment section not found:",
+        postId
+      );
 
-    return;
+      return;
 
-  }
-
-
-  const isHidden =
-    section.style.display === "none" ||
-    section.style.display === "";
+    }
 
 
-  if (isHidden) {
+    const isHidden =
+      section.style.display === "none" ||
+      section.style.display === "";
 
 
-    section.style.display =
-      "block";
+    if (isHidden) {
 
 
-    loadComments(postId);
+      section.style.display =
+        "block";
 
 
-  } else {
+      loadComments(postId);
 
 
-    section.style.display =
-      "none";
+    } else {
 
 
-  }
+      section.style.display =
+        "none";
 
-};
+
+    }
+
+  };
 
 
 /* =========================
@@ -658,6 +415,7 @@ window.toggleComments = function(postId) {
 
 window.createComment =
   async function(e, postId) {
+
 
     e.preventDefault();
 
@@ -695,6 +453,7 @@ window.createComment =
 
 
     try {
+
 
       await addDoc(
 
@@ -738,6 +497,7 @@ window.createComment =
 
     } catch (error) {
 
+
       console.error(
         "Comment error:",
         error
@@ -755,11 +515,590 @@ window.createComment =
 
 
 /* =========================
-   LIKE / UNLIKE
+   LOAD COMMUNITY POSTS
+========================= */
+
+function startCommunityPosts() {
+
+  const postsContainer =
+    document.getElementById(
+      "communityPosts"
+    );
+
+
+  if (!postsContainer) return;
+
+
+  const postsQuery = query(
+
+    collection(db, "posts"),
+
+    orderBy(
+      "createdAt",
+      "desc"
+    ),
+
+    limit(50)
+
+  );
+
+
+  onSnapshot(
+
+    postsQuery,
+
+
+    async (snapshot) => {
+
+
+      if (snapshot.empty) {
+
+        postsContainer.innerHTML = `
+
+          <div class="card empty-posts">
+
+            <h3>
+              No posts yet
+            </h3>
+
+            <p>
+              Be the first gamer to post
+              in CTRLZONE Community! 🎮
+            </p>
+
+          </div>
+
+        `;
+
+        return;
+
+      }
+
+
+      const user =
+        currentUser ||
+        auth.currentUser;
+
+
+      const postsHTML =
+        await Promise.all(
+
+          snapshot.docs.map(
+            async (postDoc) => {
+
+
+              const post =
+                postDoc.data();
+
+
+              const postId =
+                postDoc.id;
+
+
+              const name =
+                escapeHTML(
+                  post.name ||
+                  "CTRLZONE Gamer"
+                );
+
+
+              const initial =
+                name
+                  .charAt(0)
+                  .toUpperCase();
+
+
+              const date =
+                post.createdAt?.toDate
+
+                  ? post.createdAt
+                      .toDate()
+                      .toLocaleString()
+
+                  : "Just now";
+
+
+              const content =
+                escapeHTML(
+                  post.content || ""
+                )
+                  .replaceAll(
+                    "\n",
+                    "<br>"
+                  );
+
+
+              const likes =
+                Number(
+                  post.likes || 0
+                );
+
+
+              let hasLiked =
+                false;
+
+
+              if (user) {
+
+                try {
+
+                  const likeRef = doc(
+
+                    db,
+
+                    "posts",
+
+                    postId,
+
+                    "likes",
+
+                    user.uid
+
+                  );
+
+
+                  const likeSnapshot =
+                    await getDoc(
+                      likeRef
+                    );
+
+
+                  hasLiked =
+                    likeSnapshot.exists();
+
+
+                } catch (error) {
+
+                  console.error(
+                    "Like status error:",
+                    error
+                  );
+
+                }
+
+              }
+
+
+              const likeText =
+                hasLiked
+                  ? "👍 Liked"
+                  : "👍 Like";
+
+
+              return `
+
+                <article
+                  class="community-post"
+                >
+
+
+                  <div
+                    class="post-user"
+                  >
+
+
+                    <div
+                      class="post-avatar"
+                    >
+
+                      ${initial}
+
+                    </div>
+
+
+                    <div>
+
+                      <h3>
+                        ${name}
+                      </h3>
+
+                      <span>
+                        ${date}
+                      </span>
+
+                    </div>
+
+
+                  </div>
+
+
+
+                  <div
+                    class="post-content"
+                  >
+
+                    ${content}
+
+                  </div>
+
+
+
+                  <div
+                    class="post-actions"
+                  >
+
+
+                    <button
+
+                      class="like-btn"
+
+                      type="button"
+
+                      onclick="toggleLike('${postId}')"
+
+                    >
+
+                      ${likeText}
+
+                      <span>
+                        ${likes}
+                      </span>
+
+                    </button>
+
+
+                    <button
+
+                      class="comment-btn"
+
+                      type="button"
+
+                      onclick="toggleComments('${postId}')"
+
+                    >
+
+                      💬 Comment
+
+                    </button>
+
+
+                  </div>
+
+
+
+                  <div
+
+                    class="comments-section"
+
+                    id="comment-section-${postId}"
+
+                    style="display:none;"
+
+                  >
+
+
+                    <div
+
+                      class="comments-list"
+
+                      id="comments-${postId}"
+
+                    >
+
+                      <p class="no-comments">
+                        Loading comments...
+                      </p>
+
+                    </div>
+
+
+                    <form
+
+                      class="comment-form"
+
+                      onsubmit="createComment(event, '${postId}')"
+
+                    >
+
+
+                      <input
+
+                        type="text"
+
+                        id="comment-input-${postId}"
+
+                        placeholder="Write a comment..."
+
+                        autocomplete="off"
+
+                        required
+
+                      >
+
+
+                      <button
+                        type="submit"
+                      >
+
+                        Send
+
+                      </button>
+
+
+                    </form>
+
+
+                  </div>
+
+
+                </article>
+
+              `;
+
+
+            }
+
+          )
+
+        );
+
+
+      postsContainer.innerHTML =
+        postsHTML.join("");
+
+
+    },
+
+
+    (error) => {
+
+
+      console.error(
+        "Firestore error:",
+        error
+      );
+
+
+      postsContainer.innerHTML = `
+
+        <div class="card">
+
+          <h3>
+            Firestore error
+          </h3>
+
+          <p>
+            ${escapeHTML(error.message)}
+          </p>
+
+        </div>
+
+      `;
+
+
+    }
+
+  );
+
+}
+
+
+/* =========================
+   LOGIN
+========================= */
+
+window.ctrlzoneLogin =
+  async function(e) {
+
+
+    e.preventDefault();
+
+
+    try {
+
+
+      await signInWithEmailAndPassword(
+
+        auth,
+
+        document
+          .getElementById("email")
+          .value
+          .trim(),
+
+        document
+          .getElementById("password")
+          .value
+
+      );
+
+
+      location.href =
+        "dashboard.html";
+
+
+    } catch (err) {
+
+
+      message(
+
+        "authMessage",
+
+        err.message,
+
+        true
+
+      );
+
+
+    }
+
+  };
+
+
+/* =========================
+   REGISTER
+========================= */
+
+window.ctrlzoneRegister =
+  async function(e) {
+
+
+    e.preventDefault();
+
+
+    try {
+
+
+      const credential =
+
+        await createUserWithEmailAndPassword(
+
+          auth,
+
+          document
+            .getElementById("email")
+            .value
+            .trim(),
+
+          document
+            .getElementById("password")
+            .value
+
+        );
+
+
+      const nameField =
+        document.getElementById(
+          "displayName"
+        );
+
+
+      if (
+        nameField?.value.trim()
+      ) {
+
+
+        await updateProfile(
+
+          credential.user,
+
+          {
+
+            displayName:
+              nameField
+                .value
+                .trim()
+
+          }
+
+        );
+
+
+      }
+
+
+      location.href =
+        "dashboard.html";
+
+
+    } catch (err) {
+
+
+      message(
+
+        "authMessage",
+
+        err.message,
+
+        true
+
+      );
+
+
+    }
+
+  };
+
+
+/* =========================
+   GOOGLE LOGIN
+========================= */
+
+window.googleLogin =
+  async function() {
+
+
+    try {
+
+
+      await signInWithPopup(
+
+        auth,
+
+        provider
+
+      );
+
+
+      location.href =
+        "dashboard.html";
+
+
+    } catch (err) {
+
+
+      message(
+
+        "authMessage",
+
+        err.message,
+
+        true
+
+      );
+
+
+    }
+
+  };
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+window.ctrlzoneLogout =
+  async function() {
+
+
+    await signOut(auth);
+
+
+    location.href =
+      "index.html";
+
+
+  };
+
+
+/* =========================
+   LIKE / UNLIKE SYSTEM
 ========================= */
 
 window.toggleLike =
   async function(postId) {
+
 
     const user =
       currentUser ||
@@ -787,22 +1126,29 @@ window.toggleLike =
 
     const likeRef =
       doc(
+
         db,
+
         "posts",
+
         postId,
+
         "likes",
+
         user.uid
+
       );
 
 
     try {
+
 
       await runTransaction(
 
         db,
 
 
-        async transaction => {
+        async (transaction) => {
 
 
           const postSnapshot =
@@ -828,11 +1174,13 @@ window.toggleLike =
           }
 
 
+          const postData =
+            postSnapshot.data();
+
+
           const currentLikes =
             Number(
-              postSnapshot
-                .data()
-                .likes || 0
+              postData.likes || 0
             );
 
 
@@ -900,7 +1248,9 @@ window.toggleLike =
 
             );
 
+
           }
+
 
         }
 
@@ -909,6 +1259,7 @@ window.toggleLike =
 
     } catch (error) {
 
+
       console.error(
         "Like error:",
         error
@@ -916,175 +1267,15 @@ window.toggleLike =
 
 
       alert(
-        "Unable to update Like: " +
+
+        "Unable to update like: " +
+
         error.message
+
       );
+
 
     }
-
-  };
-
-
-/* =========================
-   LOGIN
-========================= */
-
-window.ctrlzoneLogin =
-  async function(e) {
-
-    e.preventDefault();
-
-
-    try {
-
-      await signInWithEmailAndPassword(
-
-        auth,
-
-        document
-          .getElementById("email")
-          .value
-          .trim(),
-
-        document
-          .getElementById("password")
-          .value
-
-      );
-
-
-      location.href =
-        "dashboard.html";
-
-
-    } catch (error) {
-
-      message(
-        "authMessage",
-        error.message,
-        true
-      );
-
-    }
-
-  };
-
-
-/* =========================
-   REGISTER
-========================= */
-
-window.ctrlzoneRegister =
-  async function(e) {
-
-    e.preventDefault();
-
-
-    try {
-
-      const credential =
-        await createUserWithEmailAndPassword(
-
-          auth,
-
-          document
-            .getElementById("email")
-            .value
-            .trim(),
-
-          document
-            .getElementById("password")
-            .value
-
-        );
-
-
-      const nameField =
-        document.getElementById(
-          "displayName"
-        );
-
-
-      if (
-        nameField?.value.trim()
-      ) {
-
-        await updateProfile(
-
-          credential.user,
-
-          {
-
-            displayName:
-              nameField.value.trim()
-
-          }
-
-        );
-
-      }
-
-
-      location.href =
-        "dashboard.html";
-
-
-    } catch (error) {
-
-      message(
-        "authMessage",
-        error.message,
-        true
-      );
-
-    }
-
-  };
-
-
-/* =========================
-   GOOGLE LOGIN
-========================= */
-
-window.googleLogin =
-  async function() {
-
-    try {
-
-      await signInWithPopup(
-        auth,
-        provider
-      );
-
-
-      location.href =
-        "dashboard.html";
-
-
-    } catch (error) {
-
-      message(
-        "authMessage",
-        error.message,
-        true
-      );
-
-    }
-
-  };
-
-
-/* =========================
-   LOGOUT
-========================= */
-
-window.ctrlzoneLogout =
-  async function() {
-
-    await signOut(auth);
-
-    location.href =
-      "index.html";
 
   };
 
@@ -1096,12 +1287,8 @@ window.ctrlzoneLogout =
 window.createCommunityPost =
   async function(e) {
 
+
     e.preventDefault();
-
-
-    const user =
-      currentUser ||
-      auth.currentUser;
 
 
     const status =
@@ -1122,17 +1309,24 @@ window.createCommunityPost =
       );
 
 
+    const user =
+      currentUser ||
+      auth.currentUser;
+
+
     if (!user) {
+
 
       if (status) {
 
         status.textContent =
-          "Please log in first.";
+          "Your login session is still loading. Please wait a moment.";
 
         status.style.color =
           "#ff8a8a";
 
       }
+
 
       return;
 
@@ -1146,13 +1340,16 @@ window.createCommunityPost =
     if (!content) return;
 
 
-    button.disabled = true;
+    button.disabled =
+      true;
+
 
     button.textContent =
       "POSTING...";
 
 
     try {
+
 
       await addDoc(
 
@@ -1197,7 +1394,8 @@ window.createCommunityPost =
       );
 
 
-      input.value = "";
+      input.value =
+        "";
 
 
       if (status) {
@@ -1213,6 +1411,7 @@ window.createCommunityPost =
 
     } catch (error) {
 
+
       if (status) {
 
         status.textContent =
@@ -1224,10 +1423,8 @@ window.createCommunityPost =
       }
 
 
-      console.error(error);
-
-
     } finally {
+
 
       button.disabled =
         false;
@@ -1235,6 +1432,7 @@ window.createCommunityPost =
 
       button.textContent =
         "POST";
+
 
     }
 
@@ -1247,19 +1445,30 @@ window.createCommunityPost =
 
 async function boot() {
 
+
   try {
 
+
     await setPersistence(
+
       auth,
+
       browserLocalPersistence
+
     );
+
 
   } catch (error) {
 
+
     console.warn(
+
       "Persistence warning:",
+
       error
+
     );
+
 
   }
 
@@ -1268,20 +1477,23 @@ async function boot() {
 
     auth,
 
-
-    user => {
-
-
-      currentUser = user;
+    (user) => {
 
 
-      updateUserUI(user);
+      currentUser =
+        user;
+
+
+      updateUserUI(
+        user
+      );
 
 
       if (
 
-        document.body.dataset.protected ===
-        "true"
+        document.body
+          .dataset
+          .protected === "true"
 
         &&
 
@@ -1289,8 +1501,10 @@ async function boot() {
 
       ) {
 
+
         location.href =
           "login.html";
+
 
         return;
 
@@ -1303,13 +1517,16 @@ async function boot() {
 
         &&
 
-        document.body.dataset.authPage ===
-        "true"
+        document.body
+          .dataset
+          .authPage === "true"
 
       ) {
 
+
         location.href =
           "dashboard.html";
+
 
         return;
 
@@ -1318,9 +1535,11 @@ async function boot() {
 
       startCommunityPosts();
 
+
     }
 
   );
+
 
 }
 
