@@ -1,83 +1,76 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Community | CTRLZONE</title>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Community • Ultra | CTRLZONE</title>
 <link rel="stylesheet" href="css/style.css">
-</head>
-<body data-protected="true">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+</head><body>
 <aside class="sidebar">
-  <a class="brand" href="index.html"><span>CTRL</span>ZONE</a>
+  <a class="brand" href="index.html"><span style="color:#00e5ff">CTRL</span>ZONE</a>
   <nav>
-    <a href="index.html">⌂ <span>Home</span></a>
-    <a href="games.html">🎮 <span>Games</span></a>
-    <a href="streams.html">🔴 <span>Live</span></a>
-    <a href="videos.html">▶ <span>Videos</span></a>
-    <a class="active" href="community.html">👥 <span>Community</span></a>
-    <a href="events.html">🏆 <span>Events</span></a>
-    <a href="news.html">📰 <span>News</span></a>
-    <a href="gallery.html">🖼 <span>Gallery</span></a>
-    <a href="spin.html">🎡 <span>CTRL Spin</span></a>
-  </nav>
-  <div class="side-bottom">
-    <a href="login.html" data-auth-login>🔐 Login</a>
-    <a href="dashboard.html" data-auth-user style="display:none">👤 My Account</a>
-  </div>
+  <a href="index.html">⌂ <span>Home</span></a>
+  <a href="games.html">🎮 <span>Games</span></a>
+  <a href="streams.html">🔴 <span>Live</span></a>
+  <a href="videos.html">▶ <span>Videos</span></a>
+  <a href="community.html" class="active" style="background:rgba(0,229,255,0.12);color:#00e5ff;border-color:rgba(0,229,255,0.2)">👥 <span>Community</span></a>
+  <a href="events.html">🏆 <span>Events</span></a>
+  <a href="news.html">📰 <span>News</span></a>
+  <a href="gallery.html">🖼 <span>Gallery</span></a>
+  <a href="spin.html">🎡 <span>CTRL Spin</span></a>
+</nav>
+  <div class="side-bottom"><a href="login.html" data-auth-login>🔐 Login</a><a href="dashboard.html" data-auth-user style="display:none">👤 My Account</a></div>
 </aside>
 
 <main>
-<header class="topbar">
-  <button class="menu-btn" onclick="toggleMenu()">☰</button>
-  <div class="status">● ONLINE</div>
-  <a href="dashboard.html" class="profile" title="My CTRLZONE"><span data-user-avatar>G</span></a>
-</header>
+<header class="topbar"><button class="menu-btn" onclick="toggleMenu()">☰</button><div class="status">● ULTRA • LIVE</div><a href="dashboard.html" class="profile"><span data-user-avatar>G</span></a></header>
 
-<section class="page-head">
-  <div class="badge">CTRLZONE COMMUNITY</div>
-  <h1>Community</h1>
-  <p>Share your gaming moments with fellow gamers.</p>
-</section>
-
-<section class="community-wrap">
-  <div class="card create-post-card">
-    <div class="create-post-header">
-      <div class="small-avatar" data-user-avatar>G</div>
-      <div>
-        <h3 data-user-name>CTRLZONE Gamer</h3>
-        <span data-user-email>Login to start posting</span>
+<section class="ultra-hero">
+  <div class="ultra-hero-bg"></div>
+  <div class="ultra-hero-inner">
+    <div>
+      <div class="ultra-badge"><div class="dot"></div> COMMUNITY FEED • ULTRA MODE • REAL-TIME</div>
+      <h1>BUILT FOR <span class="grad">GAMERS</span></h1>
+      <p>The most advanced gaming community in PH. Share clutch plays, find squads, earn XP.</p>
+      <div class="ultra-stats">
+        <div class="ultra-stat"><b class="cyan">12.4K</b><span>Members</span></div>
+        <div class="ultra-stat"><b class="purple">847</b><span>Online</span></div>
+        <div class="ultra-stat"><b class="pink">2.1K</b><span>Today</span></div>
       </div>
     </div>
-
-    <form id="communityPostForm" onsubmit="createCommunityPost(event)" style="display:none">
-      <textarea id="postContent" maxlength="1000" placeholder="What's happening in your game?" required></textarea>
-      <div class="post-actions">
-        <span id="postStatus"></span>
-        <button id="postButton" class="btn" type="submit">POST</button>
+    <div class="ultra-right">
+      <div class="ultra-preview-card">
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px"><div class="ultra-avatar" style="width:36px;height:36px">C</div><div><b style="font-size:13px;color:white">CTRLZONE Live</b><div style="font-size:11px;color:#6b7fa0">Preview</div></div></div>
+        <div style="display:grid;gap:6px"><div style="height:8px;background:rgba(255,255,255,0.08);border-radius:100px"></div><div style="height:8px;background:rgba(255,255,255,0.06);border-radius:100px;width:80%"></div><div style="height:8px;background:rgba(255,255,255,0.04);border-radius:100px;width:60%"></div></div>
       </div>
-    </form>
-
-    <p class="login-hint" data-auth-login>
-      You need to <a href="login.html">log in</a> before posting.
-    </p>
-  </div>
-
-  <div class="community-title">
-    <h2>Latest Posts</h2>
-    <span>Live from Firestore 🔥</span>
-  </div>
-
-  <div id="communityPosts" class="community-posts">
-    <div class="card empty-posts">
-      <h3>Loading posts...</h3>
     </div>
   </div>
 </section>
 
-<footer>© 2026 CTRLZONE — All-in-One Gaming Platform</footer>
+<div class="ultra-layout">
+  <div>
+    <div class="ultra-composer">
+      <div class="ultra-composer-top"><div class="ultra-avatar" data-user-avatar>G</div><div><b data-user-name style="font-size:14px;color:white">CTRLZONE Gamer</b><div data-user-email style="font-size:11px;color:#6b7fa0">Login to post</div></div></div>
+      <div class="ultra-composer-form">
+        <form id="communityPostForm" onsubmit="createCommunityPost(event)"><textarea id="postContent" class="ultra-textarea" maxlength="1000" placeholder="What's your clutch play today?" required></textarea><div class="ultra-composer-bottom"><div class="ultra-tools"><button type="button" class="ultra-tool">🖼️</button><button type="button" class="ultra-tool">🎬</button><button type="button" class="ultra-tool">🎮</button></div><div style="display:flex;gap:10px;align-items:center"><span id="postStatus"></span><button id="postButton" class="ultra-post-btn">POST →</button></div></div></form>
+        <p class="login-hint" data-auth-login style="font-size:12px;color:#6b7fa0;margin-top:8px">Login to post • <a href="login.html" style="color:#00e5ff">Login</a></p>
+      </div>
+    </div>
+        <div class="ultra-section-title">🔥 Latest Drops</div>
+    <div id="communityPosts" style="display:grid;gap:12px">
+      <div class="ultra-post" id="loadingPost" style="text-align:center;padding:32px">
+        <div style="font-size:24px;margin-bottom:8px">⏳</div>
+        <div style="color:#6b7fa0;font-size:13px">Loading ultra feed from Firestore...</div>
+        <div style="margin-top:10px;font-size:11px;color:#3a4a64">If this stays, check Firebase Rules or Console (F12)</div>
+      </div>
+    </div>
+  </div>
+  <div class="ultra-sidebar">
+    <div class="ultra-side-card"><div class="ultra-side-title">🟢 ONLINE • 847</div><div style="display:grid;gap:8px;font-size:13px;color:white"><div>● JayPlays - MLBB</div><div>● MarkSniper - PUBG</div><div>● AnaGamer - Streaming</div></div></div>
+    <div class="ultra-side-card"><div class="ultra-side-title">🏆 LEADERBOARD</div><div style="display:grid;gap:8px"><div style="display:flex;justify-content:space-between"><b style="color:white">#1 JayPlays</b><span style="color:#00e5ff">1,240 XP</span></div><div style="display:flex;justify-content:space-between"><b style="color:white">#2 Mark</b><span style="color:#7c3aed">980 XP</span></div></div></div>
+  </div>
+</div>
+
+<footer>© 2026 CTRLZONE ULTRA</footer>
 </main>
-
-<script src="js/script.js"></script>
-<script type="module" src="js/firebase-auth.js"></script>
-</body>
-</html>
+<script src="js/script.js"></script><script type="module" src="js/firebase-auth.js"></script>
+</body></html>
