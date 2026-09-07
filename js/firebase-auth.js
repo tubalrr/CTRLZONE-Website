@@ -167,23 +167,56 @@ window.createCommunityPost = async function(e) {
   }
 };
 
-/* START POSTS - ULTRA DESIGN + COMMENTS FIXED */
+/* START POSTS - ULTRA DESIGN + COMMENTS FIXED - NEVER STUCK */
 function startCommunityPosts() {
   if (postsStarted) return;
   const postsContainer = document.getElementById("communityPosts");
-  if (!postsContainer) return;
+  if (!postsContainer) { console.error("communityPosts not found"); return; }
   postsStarted = true;
 
-  postsContainer.innerHTML = '<div class="ultra-post" style="text-align:center;padding:24px;color:#6b7fa0">⏳ Loading ultra feed...</div>';
+  console.log("Starting community posts...");
 
   const postsQuery = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(50));
 
+  // Safety timeout - if Firestore doesn't respond in 8 seconds, show error
+  const timeoutId = setTimeout(() => {
+    const loadingEl = document.getElementById("loadingPost");
+    if (loadingEl && postsContainer.contains(loadingEl)) {
+      postsContainer.innerHTML = `
+        <div class="ultra-post" style="border-color:#ff8a8a">
+          <h3 style="margin:0 0 8px;color:#ff8a8a">⚠️ Firestore not responding</h3>
+          <p style="font-size:13px;color:#c8d6ee;line-height:1.6">
+            Loading post lang? 2 possible reasons:<br>
+            1. <b>Firestore Rules</b> - need <code style="background:#0a0f1e;padding:2px 6px;border-radius:6px">allow read: if true;</code> for posts<br>
+            2. <b>Internet / Adblock</b> - check Console (F12) for errors<br><br>
+            Fix: Go to Firebase Console > Firestore > Rules > set to:<br>
+            <code style="display:block;background:#080d1c;border:1px solid #1c2e4f;padding:12px;border-radius:10px;margin-top:8px;font-size:11px;white-space:pre-wrap">rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /posts/{postId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update: if true;
+      match /comments/{commentId} { allow read: if true; allow create: if request.auth != null; }
+      match /likes/{likeId} { allow read: if true; allow write: if request.auth != null; }
+    }
+  }
+}</code>
+          </p>
+          <button onclick="location.reload()" style="margin-top:12px;background:var(--cyan);color:#000;border:0;padding:8px 16px;border-radius:10px;font-weight:700;cursor:pointer">Reload</button>
+        </div>`;
+    }
+  }, 8000);
+
   onSnapshot(postsQuery, async snapshot => {
+    clearTimeout(timeoutId);
+    console.log("Posts snapshot:", snapshot.size, "docs");
+
     if (snapshot.empty) {
       postsContainer.innerHTML = `
         <div class="ultra-post" style="text-align:center">
           <h3 style="margin:0 0 6px">No posts yet</h3>
-          <p style="color:#6b7fa0;font-size:13px">Be the first gamer to post in CTRLZONE Community! 🎮</p>
+          <p style="color:#6b7fa0;font-size:13px">Be the first gamer to post in CTRLZONE Community! 🎮<br>Login ka muna tapos mag-post.</p>
         </div>`;
       return;
     }
@@ -194,14 +227,14 @@ function startCommunityPosts() {
       const name = post.name || "CTRLZONE Gamer";
       const initial = name.charAt(0).toUpperCase();
       const date = formatDate(post.createdAt);
-      const content = escapeHTML(post.content).replaceAll("\n", "<br>");
+      const content = escapeHTML(post.content).replaceAll("
+", "<br>");
       const likes = Number(post.likes || 0);
       let avatarHTML = initial;
       if (post.photoURL) {
         avatarHTML = `<img src="${escapeHTML(post.photoURL)}" alt="Profile" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
       }
 
-      // ULTRA DESIGN with like + comment buttons
       return `
 <article class="ultra-post" data-post-id="${postId}">
   <div class="ultra-post-head">
@@ -223,8 +256,6 @@ function startCommunityPosts() {
     </div>
     <span style="font-size:10px;color:#3a4a64">ID:${postId.slice(0,6)}</span>
   </div>
-
-  <!-- COMMENTS SECTION - FIXED DISPLAY -->
   <div class="comments-section" id="comment-section-${postId}" style="display:none; margin-top:12px;">
     <div class="comments-list" id="comments-${postId}">
       <p class="no-comments">Loading comments...</p>
@@ -239,12 +270,17 @@ function startCommunityPosts() {
 
     postsContainer.innerHTML = html;
 
-    // Load comments and like status after render
     snapshot.docs.forEach(postDoc => { loadComments(postDoc.id); });
     refreshLikeButtons(snapshot.docs);
   }, error => {
+    clearTimeout(timeoutId);
     console.error("POSTS ERROR:", error);
-    postsContainer.innerHTML = `<div class="ultra-post"><h3>Firestore Error</h3><p>${escapeHTML(error.message)}</p><small style="color:#6b7fa0">Check Firestore Rules: allow read: if true; allow create: if request.auth != null;</small></div>`;
+    postsContainer.innerHTML = `
+      <div class="ultra-post" style="border-color:#ff8a8a">
+        <h3 style="color:#ff8a8a">Firestore Error: ${escapeHTML(error.code || "")}</h3>
+        <p style="font-size:13px;color:#c8d6ee">${escapeHTML(error.message)}</p>
+        <p style="font-size:11px;color:#6b7fa0;margin-top:8px">Fix: Firebase Console > Firestore > Rules > allow read: if true; for posts collection</p>
+      </div>`;
   });
 }
 
