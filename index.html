@@ -22,7 +22,7 @@
 </aside>
 
 <main>
-<header class="topbar"><button class="menu-btn" onclick="toggleMenu()">☰</button><div class="status">● ULTRA • LIVE • 847 ONLINE</div><a href="dashboard.html" class="profile"><span data-user-avatar>G</span></a></header>
+<header class="topbar"><button class="menu-btn" onclick="toggleMenu()">☰</button><div style="display:flex;gap:12px;align-items:center"><div class="status">● ULTRA • LIVE • REAL-TIME</div><div id="globalNotifBell" style="position:relative;cursor:pointer;display:none"><span style="font-size:18px">🔔</span><span id="globalNotifBadge" style="position:absolute;top:-6px;right:-6px;background:#ff2e93;color:white;font-size:9px;font-weight:800;padding:2px 6px;border-radius:100px;display:none">NEW</span></div></div><a href="dashboard.html" class="profile"><span data-user-avatar>G</span></a></header>
 
 <section class="ultra-hero">
   <div class="ultra-hero-bg"></div>
@@ -74,6 +74,7 @@
   </div>
 </section>
 
+<div id="homeVideoBanner" style="display:none;max-width:1280px;margin:0 auto;padding:0 24px"><div style="background:linear-gradient(90deg,rgba(0,229,255,0.15),rgba(124,58,237,0.15));border:1px solid rgba(0,229,255,0.3);border-radius:14px;padding:14px 16px;margin:16px 0;display:flex;justify-content:space-between;align-items:center"><div style="display:flex;gap:12px;align-items:center"><div style="width:36px;height:36px;border-radius:10px;background:#1877f2;display:grid;place-items:center;font-size:18px">📘</div><div><div style="font-size:13px;color:white;font-weight:700" id="homeBannerTitle">New Video from CtrlZone!</div><div style="font-size:11px;color:#6b7fa0" id="homeBannerDesc">Admin posted new FB video</div></div></div><div style="display:flex;gap:8px"><a href="videos.html" style="background:var(--cyan);color:#000;padding:8px 14px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:700">Watch →</a><button onclick="this.parentElement.parentElement.parentElement.style.display='none'; localStorage.setItem('lastSeenVideo', Date.now())" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);color:white;padding:8px 12px;border-radius:8px;font-size:11px;cursor:pointer">X</button></div></div></div>
 <div class="ultra-layout" style="grid-template-columns:1fr">
   <div>
     <div class="ultra-section-title">🎮 FEATURED GAMES • MOST PLAYED</div>
@@ -243,6 +244,49 @@ onSnapshot(postsQuery, snapshot => {
   setText("realTotalPosts", "Error");
   setText("statPosts", "Error");
 });
+</script>
+
+<script type="module">
+// GLOBAL NOTIFICATION FOR NEW VIDEOS - ON ALL PAGES
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getFirestore, collection, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+const firebaseConfig2 = {
+  apiKey: "AIzaSyDZ9dqwfUbKGSNq9YK96voy-vUiC-dkg5c",
+  authDomain: "ctrlzone-50db8.firebaseapp.com",
+  projectId: "ctrlzone-50db8",
+  storageBucket: "ctrlzone-50db8.firebasestorage.app",
+  messagingSenderId: "961266035107",
+  appId: "1:961266035107:web:03c628e259d317013b9216"
+};
+
+try{
+  const app2 = initializeApp(firebaseConfig2, "notifApp");
+  const db2 = getFirestore(app2);
+  const vidsQuery = query(collection(db2, "videos"), orderBy("createdAt", "desc"), limit(1));
+  onSnapshot(vidsQuery, snap=>{
+    if(snap.empty) return;
+    const latest = snap.docs[0].data();
+    let latestTime = 0;
+    try{ latestTime = latest.createdAt?.toDate?.()?.getTime() || 0; }catch(e){}
+    const lastSeen = localStorage.getItem('lastSeenVideo');
+    const lastSeenTime = lastSeen ? parseInt(lastSeen) : 0;
+    if(latestTime > lastSeenTime && latestTime>0){
+      const bell = document.getElementById("globalNotifBell");
+      const badge = document.getElementById("globalNotifBadge");
+      const banner = document.getElementById("homeVideoBanner");
+      const bTitle = document.getElementById("homeBannerTitle");
+      const bDesc = document.getElementById("homeBannerDesc");
+      if(bell) bell.style.display="block";
+      if(badge) badge.style.display="block";
+      if(banner){
+        banner.style.display="block";
+        if(bTitle) bTitle.textContent = "🔔 New: "+(latest.title||"New Video from CtrlZone");
+        if(bDesc) bDesc.textContent = "Admin posted on Facebook • Click Watch to view";
+      }
+    }
+  });
+}catch(e){ console.log("Notif init", e); }
 </script>
 </body></html>
 
