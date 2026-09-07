@@ -1,38 +1,157 @@
 <!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Home | CTRLZONE</title><link rel="stylesheet" href="css/style.css">
+<title>Home • ULTRA | CTRLZONE</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 </head><body>
-
 <aside class="sidebar">
-  <a class="brand" href="index.html"><span>CTRL</span>ZONE</a>
+  <a class="brand" href="index.html"><span style="color:#00e5ff">CTRL</span>ZONE</a>
   <nav>
-    <a href="index.html">⌂ <span>Home</span></a>
-    <a href="games.html">🎮 <span>Games</span></a>
-    <a href="streams.html">🔴 <span>Live</span></a>
-    <a href="videos.html">▶ <span>Videos</span></a>
-    <a href="community.html">👥 <span>Community</span></a>
-    <a href="events.html">🏆 <span>Events</span></a>
-    <a href="news.html">📰 <span>News</span></a>
-    <a href="gallery.html">🖼 <span>Gallery</span></a>
-    <a href="spin.html">🎡 <span>CTRL Spin</span></a>
-  </nav>
-  <div class="side-bottom"><a href="login.html">🔐 Login</a></div>
+  <a href="index.html" class="active" style="background:rgba(0,229,255,0.12);color:#00e5ff;border-color:rgba(0,229,255,0.2)">⌂ <span>Home</span></a>
+  <a href="games.html">🎮 <span>Games</span></a>
+  <a href="streams.html">🔴 <span>Live</span></a>
+  <a href="videos.html">▶ <span>Videos</span></a>
+  <a href="community.html">👥 <span>Community</span></a>
+  <a href="events.html">🏆 <span>Events</span></a>
+  <a href="news.html">📰 <span>News</span></a>
+  <a href="gallery.html">🖼 <span>Gallery</span></a>
+  <a href="spin.html">🎡 <span>CTRL Spin</span></a>
+</nav>
+  <div class="side-bottom"><a href="login.html" data-auth-login>🔐 Login</a><a href="dashboard.html" data-auth-user style="display:none">👤 My Account</a></div>
 </aside>
 
-<main><header class="topbar"><button class="menu-btn" onclick="toggleMenu()">☰</button><div class="status">● ONLINE</div><a href="dashboard.html" class="profile" title="My CTRLZONE"><span data-user-avatar>G</span></a></header>
+<main>
+<header class="topbar"><button class="menu-btn" onclick="toggleMenu()">☰</button><div class="status">● ULTRA • LIVE • 847 ONLINE</div><a href="dashboard.html" class="profile"><span data-user-avatar>G</span></a></header>
 
-        <section class="hero">
-          <div class="hero-content"><div class="badge">● GAMING COMMUNITY ONLINE</div>
-          <h1>ENTER THE <span>CTRLZONE</span></h1>
-          <p>Play. Watch. Connect. Dominate.</p>
-          <div class="actions"><a class="btn" href="games.html">EXPLORE GAMES</a><a class="btn ghost" href="streams.html">WATCH LIVE</a></div></div>
-          <div class="hero-orb">🎮</div>
-        </section>
-        <section><h2>FEATURED GAMES</h2><div class="grid cards">
-        <article class="card"><div class="game-icon">🎮</div><h3>Mobile Legends</h3><p>Explore content and join the community.</p></article><article class="card"><div class="game-icon">🎮</div><h3>Honor of Kings</h3><p>Explore content and join the community.</p></article><article class="card"><div class="game-icon">🎮</div><h3>PUBG</h3><p>Explore content and join the community.</p></article>
-        </div></section>
-        <section><h2>WHAT'S INSIDE</h2><div class="stats"><div class="stat"><b>🎮</b><span>Games</span></div><div class="stat"><b>🔴</b><span>Streams</span></div><div class="stat"><b>🏆</b><span>Events</span></div><div class="stat"><b>👥</b><span>Community</span></div></div></section>
-        
-<footer>© 2026 CTRLZONE — All-in-One Gaming Platform</footer>
-</main><script src="js/script.js"></script></body></html>
+<section class="ultra-hero">
+  <div class="ultra-hero-bg"></div>
+  <div class="ultra-hero-inner">
+    <div>
+      <div class="ultra-badge"><div class="dot"></div> PHILIPPINES #1 GAMING HUB • EST 2026</div>
+      <h1>ENTER THE <span class="grad">CTRLZONE</span></h1>
+      <p>The ultimate all-in-one gaming platform. Play, watch, connect, and dominate with 12,000+ gamers nationwide.</p>
+      <div class="actions" style="margin-top:24px">
+        <a class="btn" href="games.html">🎮 EXPLORE GAMES</a>
+        <a class="btn ghost" href="streams.html">🔴 WATCH LIVE</a>
+        <a class="btn ghost" href="community.html">👥 JOIN COMMUNITY</a>
+      </div>
+      <div class="ultra-stats">
+        <div class="ultra-stat"><b class="cyan">12.4K</b><span>Members</span></div>
+        <div class="ultra-stat"><b class="purple">2.1K</b><span>Daily Active</span></div>
+        <div class="ultra-stat"><b class="pink">847</b><span>Online Now</span></div>
+      </div>
+    </div>
+    <div class="ultra-right">
+      <div class="ultra-preview-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <b style="font-size:12px;color:white;letter-spacing:1px">🔥 TRENDING NOW</b>
+          <span style="font-size:10px;color:var(--green);background:rgba(0,255,136,0.1);padding:4px 8px;border-radius:100px">LIVE</span>
+        </div>
+        <div style="display:grid;gap:10px">
+          <div style="display:flex;gap:10px;align-items:center;background:rgba(255,255,255,0.03);padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)">
+            <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#00e5ff,#7c3aed);display:grid;place-items:center;font-size:16px">🎮</div>
+            <div style="flex:1"><div style="font-size:13px;color:white;font-weight:600">Mobile Legends</div><div style="font-size:11px;color:#6b7fa0">2.4K playing</div></div>
+            <div style="width:8px;height:8px;background:var(--green);border-radius:50%;box-shadow:0 0 8px var(--green)"></div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;background:rgba(255,255,255,0.03);padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)">
+            <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#ff2e93,#7c3aed);display:grid;place-items:center;font-size:16px">🔥</div>
+            <div style="flex:1"><div style="font-size:13px;color:white;font-weight:600">PUBG Mobile</div><div style="font-size:11px;color:#6b7fa0">1.8K playing</div></div>
+            <div style="width:8px;height:8px;background:var(--green);border-radius:50%"></div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;background:rgba(255,255,255,0.03);padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)">
+            <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#f59e0b,#ff2e93);display:grid;place-items:center;font-size:16px">👑</div>
+            <div style="flex:1"><div style="font-size:13px;color:white;font-weight:600">Honor of Kings</div><div style="font-size:11px;color:#6b7fa0">1.2K playing</div></div>
+            <div style="width:8px;height:8px;background:var(--green);border-radius:50%"></div>
+          </div>
+        </div>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:11px;color:#6b7fa0">Community XP • Level up</span>
+          <span style="font-size:11px;color:var(--cyan);font-weight:700">1,240 XP →</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ultra-layout" style="grid-template-columns:1fr">
+  <div>
+    <div class="ultra-section-title">🎮 FEATURED GAMES • MOST PLAYED</div>
+    <div class="grid cards" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+      <article class="card" style="position:relative;overflow:hidden">
+        <div style="position:absolute;top:12px;right:12px;background:rgba(0,229,255,0.15);border:1px solid rgba(0,229,255,0.3);color:var(--cyan);padding:4px 10px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:0.5px">🔥 HOT</div>
+        <div class="game-icon">🎮</div>
+        <h3>Mobile Legends</h3>
+        <p>5v5 MOBA madness. Join 2.4K players in ranked battles, clutch plays, and squad up for Mythic push.</p>
+        <div style="display:flex;gap:6px;margin-top:14px;flex-wrap:wrap">
+          <span class="ultra-tag cyan">#MOBA</span><span class="ultra-tag green">2.4K Online</span>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:8px">
+          <a href="games.html" class="btn small" style="flex:1;text-align:center">PLAY NOW</a>
+          <a href="community.html" class="btn ghost small" style="flex:1;text-align:center">JOIN SQUAD</a>
+        </div>
+      </article>
+      <article class="card" style="position:relative;overflow:hidden">
+        <div style="position:absolute;top:12px;right:12px;background:rgba(255,46,147,0.15);border:1px solid rgba(255,46,147,0.3);color:var(--pink);padding:4px 10px;border-radius:100px;font-size:10px;font-weight:700">⚡ NEW META</div>
+        <div class="game-icon">👑</div>
+        <h3>Honor of Kings</h3>
+        <p>Next-gen MOBA taking PH by storm. Learn new heroes, master builds, and dominate the King's Rift.</p>
+        <div style="display:flex;gap:6px;margin-top:14px;flex-wrap:wrap">
+          <span class="ultra-tag purple">#HOK</span><span class="ultra-tag cyan">TRENDING</span>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:8px">
+          <a href="games.html" class="btn small" style="flex:1;text-align:center">EXPLORE</a>
+          <a href="videos.html" class="btn ghost small" style="flex:1;text-align:center">WATCH GUIDES</a>
+        </div>
+      </article>
+      <article class="card" style="position:relative;overflow:hidden">
+        <div style="position:absolute;top:12px;right:12px;background:rgba(0,255,136,0.12);border:1px solid rgba(0,255,136,0.25);color:var(--green);padding:4px 10px;border-radius:100px;font-size:10px;font-weight:700">🏆 ESPORTS</div>
+        <div class="game-icon">🔫</div>
+        <h3>PUBG Mobile</h3>
+        <p>Battle royale intensity. No-recoil guides, M416 tips, and squad tactics from PH's top fraggers.</p>
+        <div style="display:flex;gap:6px;margin-top:14px;flex-wrap:wrap">
+          <span class="ultra-tag purple">#BATTLE ROYALE</span><span class="ultra-tag green">#TIPS</span>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:8px">
+          <a href="games.html" class="btn small" style="flex:1;text-align:center">DROP IN</a>
+          <a href="streams.html" class="btn ghost small" style="flex:1;text-align:center">WATCH PROS</a>
+        </div>
+      </article>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:24px">
+      <div class="ultra-side-card" style="background:linear-gradient(135deg,rgba(0,229,255,0.08),rgba(124,58,237,0.08));border-color:rgba(0,229,255,0.2)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div class="ultra-side-title" style="margin:0">🔴 LIVE NOW • 24 STREAMS</div>
+          <a href="streams.html" style="font-size:11px;color:var(--cyan);text-decoration:none;font-weight:700">VIEW ALL →</a>
+        </div>
+        <div style="display:grid;gap:8px">
+          <div style="display:flex;gap:10px;align-items:center"><div class="ultra-post-avatar" style="width:32px;height:32px">J</div><div style="flex:1"><div style="font-size:13px;color:white;font-weight:600">JayPlays • Savage Run</div><div style="font-size:11px;color:#6b7fa0">1.2K viewers • MLBB</div></div><div style="background:#ff0000;color:white;padding:4px 8px;border-radius:6px;font-size:9px;font-weight:800">LIVE</div></div>
+          <div style="display:flex;gap:10px;align-items:center"><div class="ultra-post-avatar" style="width:32px;height:32px;background:linear-gradient(135deg,#ff2e93,#7c3aed)">M</div><div style="flex:1"><div style="font-size:13px;color:white;font-weight:600">MarkSniper • No Recoil Guide</div><div style="font-size:11px;color:#6b7fa0">856 viewers • PUBG</div></div><div style="background:#ff0000;color:white;padding:4px 8px;border-radius:6px;font-size:9px;font-weight:800">LIVE</div></div>
+        </div>
+      </div>
+      <div class="ultra-side-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div class="ultra-side-title" style="margin:0">💬 COMMUNITY FEED</div>
+          <a href="community.html" style="font-size:11px;color:var(--cyan);text-decoration:none;font-weight:700">OPEN →</a>
+        </div>
+        <div style="display:grid;gap:10px">
+          <div style="font-size:13px;color:#c8d6ee;line-height:1.5">🔥 <b style="color:white">JayPlays</b> just got Savage! 5 man wipe sa Lord pit GGs</div>
+          <div style="font-size:13px;color:#c8d6ee;line-height:1.5">💡 <b style="color:white">MarkSniper</b> shared no-recoil settings for M416 + 3x</div>
+          <div style="margin-top:6px;display:flex;gap:6px"><span class="ultra-tag cyan">#MLBB</span><span class="ultra-tag purple">#PUBG</span><span class="ultra-tag green">847 Online</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ultra-section-title">🏆 WHY CTRLZONE?</div>
+    <div class="stats">
+      <div class="stat"><b>12.4K</b><span>Active Gamers</span><small style="display:block;margin-top:6px;font-size:11px;color:#5a6f90">PH's biggest squad</small></div>
+      <div class="stat"><b>2.1K</b><span>Daily Matches</span><small style="display:block;margin-top:6px;font-size:11px;color:#5a6f90">Find squad 24/7</small></div>
+      <div class="stat"><b>847</b><span>Live Now</span><small style="display:block;margin-top:6px;font-size:11px;color:#5a6f90">Streaming + playing</small></div>
+      <div class="stat"><b>100%</b><span>Pinoy Made</span><small style="display:block;margin-top:6px;font-size:11px;color:#5a6f90">Built for PH gamers</small></div>
+    </div>
+  </div>
+</div>
+
+<footer>© 2026 CTRLZONE ULTRA — Built for gamers, by gamers. Play. Watch. Connect. Dominate.</footer>
+</main><script src="js/script.js"></script><script type="module" src="js/firebase-auth.js"></script></body></html>
