@@ -453,6 +453,12 @@ footer{text-align:center;color:#3a4a64;padding:32px;border-top:1px solid var(--b
 .avatar-large{
   width:64px !important;
   height:64px !important;
-  font-size:22px !important;  
+  font-size:22px !important;
 }
-}
+
+
+/* FIX FOR DYNAMIC POSTS - community-post compatibility */
+.community-post{ display:none } /* hide old style, we use ultra-post */
+.like-btn.liked, .ultra-action.liked{ color: var(--pink) !important; }
+.like-btn{ background:transparent; border:1px solid var(--border); color:var(--muted); padding:6px 12px; border-radius:10px; cursor:pointer; font-size:12px; transition:.2s; }
+.like-btn:hover{ border-color:var(--pink); color:var(--pink); }
