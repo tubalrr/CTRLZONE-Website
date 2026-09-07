@@ -37,9 +37,9 @@
         <a class="btn ghost" href="community.html">👥 JOIN COMMUNITY</a>
       </div>
       <div class="ultra-stats">
-        <div class="ultra-stat"><b class="cyan">12.4K</b><span>Members</span></div>
-        <div class="ultra-stat"><b class="purple">2.1K</b><span>Daily Active</span></div>
-        <div class="ultra-stat"><b class="pink">847</b><span>Online Now</span></div>
+        <div class="ultra-stat"><b class="cyan" id="realTotalPosts">--</b><span>Total Posts</span></div>
+        <div class="ultra-stat"><b class="purple" id="realTotalUsers">--</b><span>Real Gamers</span></div>
+        <div class="ultra-stat"><b class="pink" id="realOnlineNow">LIVE</b><span>Community Feed</span></div>
       </div>
     </div>
     <div class="ultra-right">
@@ -51,17 +51,17 @@
         <div style="display:grid;gap:10px">
           <div style="display:flex;gap:10px;align-items:center;background:rgba(255,255,255,0.03);padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)">
             <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#00e5ff,#7c3aed);display:grid;place-items:center;font-size:16px">🎮</div>
-            <div style="flex:1"><div style="font-size:13px;color:white;font-weight:600">Mobile Legends</div><div style="font-size:11px;color:#6b7fa0">2.4K playing</div></div>
+            <div style="flex:1"><div style="font-size:13px;color:white;font-weight:600">Mobile Legends</div><div style="font-size:11px;color:#6b7fa0" id="mlbbCount">Loading...</div></div>
             <div style="width:8px;height:8px;background:var(--green);border-radius:50%;box-shadow:0 0 8px var(--green)"></div>
           </div>
           <div style="display:flex;gap:10px;align-items:center;background:rgba(255,255,255,0.03);padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)">
             <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#ff2e93,#7c3aed);display:grid;place-items:center;font-size:16px">🔥</div>
-            <div style="flex:1"><div style="font-size:13px;color:white;font-weight:600">PUBG Mobile</div><div style="font-size:11px;color:#6b7fa0">1.8K playing</div></div>
+            <div style="flex:1"><div style="font-size:13px;color:white;font-weight:600">PUBG Mobile</div><div style="font-size:11px;color:#6b7fa0" id="pubgCount">Loading...</div></div>
             <div style="width:8px;height:8px;background:var(--green);border-radius:50%"></div>
           </div>
           <div style="display:flex;gap:10px;align-items:center;background:rgba(255,255,255,0.03);padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)">
             <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#f59e0b,#ff2e93);display:grid;place-items:center;font-size:16px">👑</div>
-            <div style="flex:1"><div style="font-size:13px;color:white;font-weight:600">Honor of Kings</div><div style="font-size:11px;color:#6b7fa0">1.2K playing</div></div>
+            <div style="flex:1"><div style="font-size:13px;color:white;font-weight:600">Honor of Kings</div><div style="font-size:11px;color:#6b7fa0" id="hokCount">Loading...</div></div>
             <div style="width:8px;height:8px;background:var(--green);border-radius:50%"></div>
           </div>
         </div>
@@ -82,9 +82,9 @@
         <div style="position:absolute;top:12px;right:12px;background:rgba(0,229,255,0.15);border:1px solid rgba(0,229,255,0.3);color:var(--cyan);padding:4px 10px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:0.5px">🔥 HOT</div>
         <div class="game-icon">🎮</div>
         <h3>Mobile Legends</h3>
-        <p>5v5 MOBA madness. Join 2.4K players in ranked battles, clutch plays, and squad up for Mythic push.</p>
+        <p>5v5 MOBA madness. Join <span id="realMLBBPlayers">real</span> players in ranked battles, clutch plays, and squad up for Mythic push.</p>
         <div style="display:flex;gap:6px;margin-top:14px;flex-wrap:wrap">
-          <span class="ultra-tag cyan">#MOBA</span><span class="ultra-tag green">2.4K Online</span>
+          <span class="ultra-tag cyan">#MOBA</span><span class="ultra-tag green"><span id="realMLBBOnline">Live</span></span>
         </div>
         <div style="margin-top:16px;display:flex;gap:8px">
           <a href="games.html" class="btn small" style="flex:1;text-align:center">PLAY NOW</a>
@@ -125,9 +125,8 @@
           <div class="ultra-side-title" style="margin:0">🔴 LIVE NOW • 24 STREAMS</div>
           <a href="streams.html" style="font-size:11px;color:var(--cyan);text-decoration:none;font-weight:700">VIEW ALL →</a>
         </div>
-        <div style="display:grid;gap:8px">
-          <div style="display:flex;gap:10px;align-items:center"><div class="ultra-post-avatar" style="width:32px;height:32px">J</div><div style="flex:1"><div style="font-size:13px;color:white;font-weight:600">JayPlays • Savage Run</div><div style="font-size:11px;color:#6b7fa0">1.2K viewers • MLBB</div></div><div style="background:#ff0000;color:white;padding:4px 8px;border-radius:6px;font-size:9px;font-weight:800">LIVE</div></div>
-          <div style="display:flex;gap:10px;align-items:center"><div class="ultra-post-avatar" style="width:32px;height:32px;background:linear-gradient(135deg,#ff2e93,#7c3aed)">M</div><div style="flex:1"><div style="font-size:13px;color:white;font-weight:600">MarkSniper • No Recoil Guide</div><div style="font-size:11px;color:#6b7fa0">856 viewers • PUBG</div></div><div style="background:#ff0000;color:white;padding:4px 8px;border-radius:6px;font-size:9px;font-weight:800">LIVE</div></div>
+        <div style="display:grid;gap:8px" id="realLiveNow">
+          <div style="font-size:12px;color:#6b7fa0;padding:12px;text-align:center">⏳ Loading real gamers...</div>
         </div>
       </div>
       <div class="ultra-side-card">
@@ -135,23 +134,115 @@
           <div class="ultra-side-title" style="margin:0">💬 COMMUNITY FEED</div>
           <a href="community.html" style="font-size:11px;color:var(--cyan);text-decoration:none;font-weight:700">OPEN →</a>
         </div>
-        <div style="display:grid;gap:10px">
-          <div style="font-size:13px;color:#c8d6ee;line-height:1.5">🔥 <b style="color:white">JayPlays</b> just got Savage! 5 man wipe sa Lord pit GGs</div>
-          <div style="font-size:13px;color:#c8d6ee;line-height:1.5">💡 <b style="color:white">MarkSniper</b> shared no-recoil settings for M416 + 3x</div>
-          <div style="margin-top:6px;display:flex;gap:6px"><span class="ultra-tag cyan">#MLBB</span><span class="ultra-tag purple">#PUBG</span><span class="ultra-tag green">847 Online</span></div>
+        <div style="display:grid;gap:10px" id="realCommunityFeed">
+          <div style="font-size:12px;color:#6b7fa0;padding:12px;text-align:center">⏳ Loading real posts...</div>
         </div>
       </div>
     </div>
 
     <div class="ultra-section-title">🏆 WHY CTRLZONE?</div>
     <div class="stats">
-      <div class="stat"><b>12.4K</b><span>Active Gamers</span><small style="display:block;margin-top:6px;font-size:11px;color:#5a6f90">PH's biggest squad</small></div>
-      <div class="stat"><b>2.1K</b><span>Daily Matches</span><small style="display:block;margin-top:6px;font-size:11px;color:#5a6f90">Find squad 24/7</small></div>
-      <div class="stat"><b>847</b><span>Live Now</span><small style="display:block;margin-top:6px;font-size:11px;color:#5a6f90">Streaming + playing</small></div>
+      <div class="stat"><b id="statPosts">--</b><span>Total Posts</span><small style="display:block;margin-top:6px;font-size:11px;color:#5a6f90">Real community posts</small></div>
+      <div class="stat"><b id="statUsers">--</b><span>Real Gamers</span><small style="display:block;margin-top:6px;font-size:11px;color:#5a6f90">Verified accounts</small></div>
+      <div class="stat"><b id="statToday">--</b><span>Today</span><small style="display:block;margin-top:6px;font-size:11px;color:#5a6f90">Posts today</small></div>
       <div class="stat"><b>100%</b><span>Pinoy Made</span><small style="display:block;margin-top:6px;font-size:11px;color:#5a6f90">Built for PH gamers</small></div>
     </div>
   </div>
 </div>
 
 <footer>© 2026 CTRLZONE ULTRA — Built for gamers, by gamers. Play. Watch. Connect. Dominate.</footer>
-</main><script src="js/script.js"></script><script type="module" src="js/firebase-auth.js"></script></body></html>
+</main><script src="js/script.js"></script><script type="module" src="js/firebase-auth.js"></script>
+<script type="module">
+// REALTIME HOMEPAGE - NO FAKE NAMES - LOCKED DESIGN
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getFirestore, collection, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDZ9dqwfUbKGSNq9YK96voy-vUiC-dkg5c",
+  authDomain: "ctrlzone-50db8.firebaseapp.com",
+  projectId: "ctrlzone-50db8",
+  storageBucket: "ctrlzone-50db8.firebasestorage.app",
+  messagingSenderId: "961266035107",
+  appId: "1:961266035107:web:03c628e259d317013b9216"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+function escapeHTML(t){return String(t||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");}
+
+const postsQuery = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(50));
+
+onSnapshot(postsQuery, snapshot => {
+  const posts = snapshot.docs.map(d=>({id:d.id, ...d.data()}));
+  const total = posts.length;
+  
+  // Count unique users
+  const users = new Set(posts.map(p=>p.uid)).size;
+  
+  // Today count
+  const today = new Date(); today.setHours(0,0,0,0);
+  const todayCount = posts.filter(p=>{
+    try{ const d = p.createdAt?.toDate?.(); return d && d >= today; }catch(e){return false}
+  }).length;
+
+  // Update stats
+  const setText = (id, val) => { const el=document.getElementById(id); if(el) el.textContent=val; };
+  setText("realTotalPosts", total);
+  setText("statPosts", total);
+  setText("realTotalUsers", users);
+  setText("statUsers", users);
+  setText("realOnlineNow", total>0 ? total+" POSTS" : "LIVE");
+  setText("statToday", todayCount);
+  setText("realMLBBPlayers", total>0 ? total : "0");
+  setText("realMLBBOnline", users>0 ? users+" gamers" : "Join now");
+  setText("mlbbCount", total>0 ? total+" posts" : "No posts yet");
+  setText("pubgCount", users>0 ? users+" gamers" : "Be first");
+  setText("hokCount", todayCount+" today");
+
+  // REAL COMMUNITY FEED - NO FAKE NAMES
+  const feedContainer = document.getElementById("realCommunityFeed");
+  if(feedContainer){
+    if(posts.length===0){
+      feedContainer.innerHTML = `<div style="font-size:13px;color:#6b7fa0;padding:12px;text-align:center">No posts yet. Be the first gamer to post! 🎮<br><a href="community.html" style="color:#00e5ff">Go to Community →</a></div>`;
+    } else {
+      feedContainer.innerHTML = posts.slice(0,3).map(p=>{
+        const name = escapeHTML(p.name||"CTRLZONE Gamer");
+        const content = escapeHTML((p.content||"").substring(0,60)) + ((p.content||"").length>60?"...":"");
+        return `<div style="font-size:13px;color:#c8d6ee;line-height:1.5;display:flex;gap:8px"><span>🔥</span><div><b style="color:white">${name}</b> ${content}<br><small style="color:#5a6f90;font-size:10px">${p.likes||0} likes • ${p.name ? "real user" : ""}</small></div></div>`;
+      }).join("") + `<div style="margin-top:10px"><a href="community.html" style="font-size:11px;color:var(--cyan);text-decoration:none;font-weight:700">VIEW ALL ${total} POSTS →</a></div>`;
+    }
+  }
+
+  // REAL LIVE NOW - recent posters
+  const liveContainer = document.getElementById("realLiveNow");
+  if(liveContainer){
+    if(posts.length===0){
+      liveContainer.innerHTML = `<div style="font-size:12px;color:#6b7fa0;padding:12px;text-align:center">No active gamers yet.<br>Be first! <a href="login.html" style="color:#00e5ff">Login</a></div>`;
+    } else {
+      // Get unique recent users
+      const recentUsers = [];
+      const seen = new Set();
+      for(const p of posts){
+        if(!seen.has(p.uid) && recentUsers.length<3){
+          seen.add(p.uid);
+          recentUsers.push(p);
+        }
+      }
+      liveContainer.innerHTML = recentUsers.map(p=>{
+        const name = escapeHTML(p.name||"Gamer");
+        const initial = name.charAt(0).toUpperCase();
+        const content = escapeHTML((p.content||"").substring(0,25));
+        return `<div style="display:flex;gap:10px;align-items:center"><div class="ultra-post-avatar" style="width:32px;height:32px">${p.photoURL ? `<img src="${escapeHTML(p.photoURL)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : initial}</div><div style="flex:1"><div style="font-size:13px;color:white;font-weight:600">${name} • ${content}</div><div style="font-size:11px;color:#6b7fa0">Real post • ${p.likes||0} likes</div></div><div style="background:var(--green);color:#000;padding:4px 8px;border-radius:6px;font-size:9px;font-weight:800">REAL</div></div>`;
+      }).join("");
+    }
+  }
+}, err=>{
+  console.error("Realtime homepage error", err);
+  const setText = (id, val) => { const el=document.getElementById(id); if(el) el.textContent=val; };
+  setText("realTotalPosts", "Error");
+  setText("statPosts", "Error");
+});
+</script>
+</body></html>
+
