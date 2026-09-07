@@ -413,48 +413,61 @@ window.toggleComments =
    CREATE COMMENT
 ========================= */
 
-window.createComment =
-  async function(e, postId) {
+window.createComment = async function(e, postId) {
+
+  e.preventDefault();
+
+  console.log("COMMENT SUBMIT STARTED");
+  console.log("POST ID:", postId);
 
 
-    e.preventDefault();
+  const user =
+    currentUser || auth.currentUser;
 
 
-    const user =
-      currentUser ||
-      auth.currentUser;
+  if (!user) {
+
+    alert("Please log in first.");
+
+    return;
+
+  }
 
 
-    if (!user) {
-
-      alert(
-        "Please log in first."
-      );
-
-      return;
-
-    }
+  const input =
+    document.getElementById(
+      "comment-input-" + postId
+    );
 
 
-    const input =
-      document.getElementById(
-        "comment-input-" + postId
-      );
+  if (!input) {
+
+    alert("Comment input not found.");
+
+    return;
+
+  }
 
 
-    if (!input) return;
+  const content =
+    input.value.trim();
 
 
-    const content =
-      input.value.trim();
+  if (!content) {
+
+    alert("Please write a comment.");
+
+    return;
+
+  }
 
 
-    if (!content) return;
+  try {
+
+    console.log("Saving comment...");
 
 
-    try {
-
-
+    const commentRef =
       await addDoc(
 
         collection(
@@ -466,432 +479,57 @@ window.createComment =
 
         {
 
-          uid:
-            user.uid,
-
+          uid: user.uid,
 
           name:
-
             user.displayName ||
-
-            user.email
-              ?.split("@")[0] ||
-
+            user.email?.split("@")[0] ||
             "CTRLZONE Gamer",
 
+          content: content,
 
-          content:
-            content,
-
-
-          createdAt:
-            serverTimestamp()
+          createdAt: serverTimestamp()
 
         }
 
       );
 
 
-      input.value = "";
-
-
-    } catch (error) {
-
-
-      console.error(
-        "Comment error:",
-        error
-      );
-
-
-      alert(
-        "Unable to post comment: " +
-        error.message
-      );
-
-    }
-
-  };
-
-
-/* =========================
-   LOAD COMMUNITY POSTS
-========================= */
-
-function startCommunityPosts() {
-
-  const postsContainer =
-    document.getElementById(
-      "communityPosts"
+    console.log(
+      "COMMENT SAVED!",
+      commentRef.id
     );
 
 
-  if (!postsContainer) return;
+    input.value = "";
 
 
-  const postsQuery = query(
+    alert("Comment posted successfully!");
 
-    collection(db, "posts"),
 
-    orderBy(
-      "createdAt",
-      "desc"
-    ),
+  } catch (error) {
 
-    limit(50)
+    console.error(
+      "COMMENT ERROR:",
+      error
+    );
 
-  );
 
+    alert(
 
-  onSnapshot(
+      "COMMENT ERROR:\n\n" +
 
-    postsQuery,
+      error.code +
 
+      "\n\n" +
 
-    async (snapshot) => {
+      error.message
 
+    );
 
-      if (snapshot.empty) {
+  }
 
-        postsContainer.innerHTML = `
-
-          <div class="card empty-posts">
-
-            <h3>
-              No posts yet
-            </h3>
-
-            <p>
-              Be the first gamer to post
-              in CTRLZONE Community! 🎮
-            </p>
-
-          </div>
-
-        `;
-
-        return;
-
-      }
-
-
-      const user =
-        currentUser ||
-        auth.currentUser;
-
-
-      const postsHTML =
-        await Promise.all(
-
-          snapshot.docs.map(
-            async (postDoc) => {
-
-
-              const post =
-                postDoc.data();
-
-
-              const postId =
-                postDoc.id;
-
-
-              const name =
-                escapeHTML(
-                  post.name ||
-                  "CTRLZONE Gamer"
-                );
-
-
-              const initial =
-                name
-                  .charAt(0)
-                  .toUpperCase();
-
-
-              const date =
-                post.createdAt?.toDate
-
-                  ? post.createdAt
-                      .toDate()
-                      .toLocaleString()
-
-                  : "Just now";
-
-
-              const content =
-                escapeHTML(
-                  post.content || ""
-                )
-                  .replaceAll(
-                    "\n",
-                    "<br>"
-                  );
-
-
-              const likes =
-                Number(
-                  post.likes || 0
-                );
-
-
-              let hasLiked =
-                false;
-
-
-              if (user) {
-
-                try {
-
-                  const likeRef = doc(
-
-                    db,
-
-                    "posts",
-
-                    postId,
-
-                    "likes",
-
-                    user.uid
-
-                  );
-
-
-                  const likeSnapshot =
-                    await getDoc(
-                      likeRef
-                    );
-
-
-                  hasLiked =
-                    likeSnapshot.exists();
-
-
-                } catch (error) {
-
-                  console.error(
-                    "Like status error:",
-                    error
-                  );
-
-                }
-
-              }
-
-
-              const likeText =
-                hasLiked
-                  ? "👍 Liked"
-                  : "👍 Like";
-
-
-              return `
-
-                <article
-                  class="community-post"
-                >
-
-
-                  <div
-                    class="post-user"
-                  >
-
-
-                    <div
-                      class="post-avatar"
-                    >
-
-                      ${initial}
-
-                    </div>
-
-
-                    <div>
-
-                      <h3>
-                        ${name}
-                      </h3>
-
-                      <span>
-                        ${date}
-                      </span>
-
-                    </div>
-
-
-                  </div>
-
-
-
-                  <div
-                    class="post-content"
-                  >
-
-                    ${content}
-
-                  </div>
-
-
-
-                  <div
-                    class="post-actions"
-                  >
-
-
-                    <button
-
-                      class="like-btn"
-
-                      type="button"
-
-                      onclick="toggleLike('${postId}')"
-
-                    >
-
-                      ${likeText}
-
-                      <span>
-                        ${likes}
-                      </span>
-
-                    </button>
-
-
-                    <button
-
-                      class="comment-btn"
-
-                      type="button"
-
-                      onclick="toggleComments('${postId}')"
-
-                    >
-
-                      💬 Comment
-
-                    </button>
-
-
-                  </div>
-
-
-
-                  <div
-
-                    class="comments-section"
-
-                    id="comment-section-${postId}"
-
-                    style="display:none;"
-
-                  >
-
-
-                    <div
-
-                      class="comments-list"
-
-                      id="comments-${postId}"
-
-                    >
-
-                      <p class="no-comments">
-                        Loading comments...
-                      </p>
-
-                    </div>
-
-
-                    <form
-
-                      class="comment-form"
-
-                      onsubmit="createComment(event, '${postId}')"
-
-                    >
-
-
-                      <input
-
-                        type="text"
-
-                        id="comment-input-${postId}"
-
-                        placeholder="Write a comment..."
-
-                        autocomplete="off"
-
-                        required
-
-                      >
-
-
-                      <button
-                        type="submit"
-                      >
-
-                        Send
-
-                      </button>
-
-
-                    </form>
-
-
-                  </div>
-
-
-                </article>
-
-              `;
-
-
-            }
-
-          )
-
-        );
-
-
-      postsContainer.innerHTML =
-        postsHTML.join("");
-
-
-    },
-
-
-    (error) => {
-
-
-      console.error(
-        "Firestore error:",
-        error
-      );
-
-
-      postsContainer.innerHTML = `
-
-        <div class="card">
-
-          <h3>
-            Firestore error
-          </h3>
-
-          <p>
-            ${escapeHTML(error.message)}
-          </p>
-
-        </div>
-
-      `;
-
-
-    }
-
-  );
-
-}
-
+};
 
 /* =========================
    LOGIN
